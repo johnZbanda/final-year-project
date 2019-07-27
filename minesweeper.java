@@ -58,11 +58,13 @@ public class minesweeper {
 
                 } else if (difficulty == 2) {
                     char board[][] = new char[intDiff][intDiff];
-                    initialiseBoard(board, difficulty);            
+                    initialiseBoard(board, difficulty); 
+                    randomiseBombs(board, difficulty, intDiff, intDiff);      
                     displayBoard(board, intDiff, intDiff);
                 } else if (difficulty == 3) {
                     char board[][] = new char[advDiff][advDiff];
-                    initialiseBoard(board, difficulty);            
+                    initialiseBoard(board, difficulty);         
+                    randomiseBombs(board, difficulty, advDiff, advDiff);   
                     displayBoard(board, advDiff, advDiff);
                 }
             }
@@ -110,10 +112,11 @@ public class minesweeper {
 
     //bombs will be classed as X
     public static void randomiseBombs(char[][] board, int difficulty, int row, int column) {
+        //refactor your code, it looks ugly right now
         Random randomNumber = new Random();
+        boolean[][] isBomb = new boolean[row][column]; //true = bomb, false = no bomb.
         switch (difficulty) {
             case 1: //easy
-                boolean[][] isBomb = new boolean[begDiff][begDiff]; //true = bomb, false = no bomb.
                 //default value is false
                 for (int placeBombs = 0; placeBombs < begBombs; placeBombs++) {
                     int randomRow = randomNumber.nextInt(begDiff);
@@ -123,6 +126,52 @@ public class minesweeper {
                     } else {
                         isBomb[randomRow][randomColumn] = true; //get this value, and update somewhere
                         board[randomRow][randomColumn] = 'x';
+                        if (isBomb[0][0] == true || isBomb[0][column - 1] == true || isBomb[row - 1][0] == true || isBomb[row - 1][column - 1] == true) {
+                            //to ensure no outofarray exceptions, -1 to row and column
+                            placeBombs--;
+                            board[randomRow][randomColumn] = '.';
+                            isBomb[randomRow][randomColumn] = false;
+                        }
+                    }
+                }
+                break;
+            
+            case 2: //intermediate
+                //default value is false
+                for (int placeBombs = 0; placeBombs < intBombs; placeBombs++) {
+                    int randomRow = randomNumber.nextInt(intDiff);
+                    int randomColumn = randomNumber.nextInt(intDiff);
+                    if (isBomb[randomRow][randomColumn] == true) {
+                        placeBombs--;
+                    } else {
+                        isBomb[randomRow][randomColumn] = true; //get this value, and update somewhere
+                        board[randomRow][randomColumn] = 'x';
+                        if (isBomb[0][0] == true || isBomb[0][column - 1] == true || isBomb[row - 1][0] == true || isBomb[row - 1][column - 1] == true) {
+                            //to ensure no outofarray exceptions, -1 to row and column
+                            placeBombs--;
+                            board[randomRow][randomColumn] = '.';
+                            isBomb[randomRow][randomColumn] = false;
+                        }
+                    }
+                }
+                break; 
+            
+            case 3: //advanced
+                //default value is false
+                for (int placeBombs = 0; placeBombs < advBombs; placeBombs++) {
+                    int randomRow = randomNumber.nextInt(advDiff);
+                    int randomColumn = randomNumber.nextInt(advDiff);
+                    if (isBomb[randomRow][randomColumn] == true) {
+                        placeBombs--;
+                    } else {
+                        isBomb[randomRow][randomColumn] = true; //get this value, and update somewhere
+                        board[randomRow][randomColumn] = 'x';
+                        if (isBomb[0][0] == true || isBomb[0][column - 1] == true || isBomb[row - 1][0] == true || isBomb[row - 1][column - 1] == true) {
+                            //to ensure no outofarray exceptions, -1 to row and column
+                            placeBombs--;
+                            board[randomRow][randomColumn] = '.';
+                            isBomb[randomRow][randomColumn] = false;
+                        }
                     }
                 }
                 break; 
