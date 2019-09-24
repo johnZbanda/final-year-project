@@ -34,14 +34,17 @@ public class minesweeper {
     final static int advBombs = 99; //bombs for advanced 99
 
     public static void main(String[] args) {
-        int difficulty = 0;
+        int difficulty, xCo, yCo = 0; //Difficulty, X Coordinate, Y Coordinate
+        char flag;
+        boolean gameWon = false;
+        boolean gameLost = false;
         do {
-            Scanner input = new Scanner(System.in);
+            Scanner difficultyInput = new Scanner(System.in);
             System.out.println("Select a difficulty");
             System.out.println("1 - Beginner, 2 - Intermediate, 3 - Advanced");
             System.out.print("Input here: ");
             //let user choose the difficulty via. an integer 1=Beginner, 2=Intermediate, 3=Advanced
-            difficulty = input.nextInt(); //possibly refactor so its function
+            difficulty = difficultyInput.nextInt(); //possibly refactor so its function
             //user input here
             if (difficulty < 1 || difficulty > 4) {
                 //invalid input, error message
@@ -69,8 +72,26 @@ public class minesweeper {
                 }
             }
         } while (difficulty < 1 || difficulty > 4);
-
         //below, should be the game
+        System.out.println("");
+        System.out.println("Input Coordinates after the board, put F AFTER Coordinates to input Flag - x y (F)");
+        
+        while (gameLost == false && gameWon == false) {
+            //play game here
+            System.out.println("");
+            Scanner xCoInput = new Scanner(System.in);
+            Scanner yCoInput = new Scanner(System.in);
+            Scanner flagInput = new Scanner(System.in);
+            //check game lost or won after every coord input  
+            System.out.print("x: ");
+            xCo = xCoInput.nextInt();
+            System.out.print("y: ");
+            yCo = yCoInput.nextInt();
+            System.out.print("flag: ");
+            flag = flagInput.next().charAt(0);   
+            
+            gameWon = true; //used for testing
+        }
 
     }
 
@@ -100,7 +121,7 @@ public class minesweeper {
                 break;
         }
     } 
-
+    //similar code to gameOfLife finding neighbour for bombs
     public static void displayBoard(char[][] board, int row, int column) { //outputs the board
         for (int x = 0; x < row; x++) {
             System.out.println();
@@ -112,7 +133,7 @@ public class minesweeper {
 
     //bombs will be classed as X
     public static void randomiseBombs(char[][] board, int difficulty, int row, int column) {
-        //refactor your code, it looks ugly right now
+        //refactor your code, it looks ugly right now (to be fair, this will probably be the ugliest part)
         Random randomNumber = new Random();
         boolean[][] isBomb = new boolean[row][column]; //true = bomb, false = no bomb.
         switch (difficulty) {
@@ -176,5 +197,56 @@ public class minesweeper {
                 }
                 break; 
         }
+    }      
+
+    //finds bombs near to the coordinates given by the user
+    public static int findNearbyBombs(int xCo, int yCo, int row, int column, boolean[][] isBomb) {
+        int nearbyBombs = 0; //increment when there is a neighbour
+        if ((xCo - 1 >= 0) && (yCo - 1 >= 0) && (isBomb[xCo-1][yCo-1] == true)) { //NW 
+            nearbyBombs++;
+        }
+        if ((xCo >= 0) && (yCo - 1 >= 0) && (isBomb[xCo][yCo-1] == true)) { //W
+            nearbyBombs++;
+        }
+        if ((xCo + 1 < row) && (yCo - 1 >= 0) && (isBomb[xCo+1][yCo-1] == true)) { //SW
+            nearbyBombs++;
+        }
+        if ((xCo + 1 < row) && (yCo < column) && (isBomb[xCo+1][yCo] == true)) { //S
+            nearbyBombs++;
+        }
+        if ((xCo + 1 < row) && (yCo + 1 < column) && (isBomb[xCo+1][yCo+1] == true)) { //SE
+            nearbyBombs++;
+        }
+        if ((xCo < row) && (yCo + 1 < column) && (isBomb[xCo][yCo+1] == true)) { //E
+            nearbyBombs++;
+        }
+        if ((xCo - 1 >= 0) && (yCo + 1 < column) && (isBomb[xCo-1][yCo+1] == true)) { //NE
+            nearbyBombs++;
+        }
+        if ((xCo - 1 >= 0) && (yCo < column) && (isBomb[xCo-1][yCo] == true)) { //N
+            nearbyBombs++;
+        }	
+        return nearbyBombs;
     }
+
+    public static boolean checkGameWon(char[][] board, int row, int column, boolean[][] isBomb) { //slightly complex
+        //if all numbers have been revealed. iterate through every position, check if the value is not .
+        
+        for (int x = 0; x < row; x++) {
+            for (int y = 0; y < column; y++) {
+                if (board[x][y] != '.' || (isBomb[x][y] == true && board[x][y] == '.') ) { //might have to check the flag count as well
+                    
+                }
+            }
+        }
+        return true;
+    }
+
+    public static boolean checkGameLost(boolean[][] isBomb, int xCo, int yCo) {
+        boolean bombFound = false;
+        if (isBomb[xCo][yCo] == true) {
+            bombFound = true;
+        } 
+        return bombFound;
+    } 
 }
