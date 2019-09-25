@@ -6,7 +6,7 @@ public class minesweeper {
     
     /*
     - Initialise the board for different difficulties - Done
-    - Play the game (multiple sub sections)
+    - Play the game (multiple sub sections) - started
     . Click (or type) a space
     . indicate how many bombs are nearby
     . Game Over if bomb is found
@@ -34,10 +34,7 @@ public class minesweeper {
     final static int advBombs = 99; //bombs for advanced 99
 
     public static void main(String[] args) {
-        int difficulty, xCo, yCo = 0; //Difficulty, X Coordinate, Y Coordinate
-        char flag;
-        boolean gameWon = false;
-        boolean gameLost = false;
+        int difficulty = 0;
         do {
             Scanner difficultyInput = new Scanner(System.in);
             System.out.println("Select a difficulty");
@@ -53,46 +50,71 @@ public class minesweeper {
             } else {
                 if (difficulty == 1) {
                     char board[][] = new char[begDiff][begDiff];
-                    boolean[][] isBomb = new boolean[begDiff][begDiff];
-                    
+                    boolean isBomb[][] = new boolean[begDiff][begDiff];
                     initialiseBoard(board, difficulty);
-                    randomiseBombs(board, difficulty, begDiff, begDiff);
+                    randomiseBombs(board, difficulty, begDiff, begDiff, isBomb);
                     displayBoard(board, begDiff, begDiff);
-
+                    playGame(board, begDiff, begDiff, isBomb);
+                    //strangely enough, i think you should put playGame here, or else it'd be long having to do cases for all of them
                 } else if (difficulty == 2) {
                     char board[][] = new char[intDiff][intDiff];
                     initialiseBoard(board, difficulty); 
-                    randomiseBombs(board, difficulty, intDiff, intDiff);      
+                    //randomiseBombs(board, difficulty, intDiff, intDiff);      
                     displayBoard(board, intDiff, intDiff);
                 } else if (difficulty == 3) {
                     char board[][] = new char[advDiff][advDiff];
-                    initialiseBoard(board, difficulty);         
-                    randomiseBombs(board, difficulty, advDiff, advDiff);   
+                    initialiseBoard(board, difficulty);        
+                   // randomiseBombs(board, difficulty, advDiff, advDiff);   
                     displayBoard(board, advDiff, advDiff);
                 }
             }
         } while (difficulty < 1 || difficulty > 4);
-        //below, should be the game
+    }
+
+    public static void playGame(char[][] board, int row, int column, boolean[][] isBomb) { 
+        //below, should be the 
+        int xCo, yCo = 0; //Difficulty, X Coordinate, Y Coordinate
+        char flag;
+        boolean gameWon = false;
+        boolean gameLost = false;
+
         System.out.println("");
         System.out.println("Input Coordinates after the board, put F AFTER Coordinates to input Flag - x y (F)");
-        
-        while (gameLost == false && gameWon == false) {
+                
+       while (gameLost == false && gameWon == false) {
             //play game here
             System.out.println("");
             Scanner xCoInput = new Scanner(System.in);
             Scanner yCoInput = new Scanner(System.in);
             Scanner flagInput = new Scanner(System.in);
             //check game lost or won after every coord input  
-            System.out.print("x: ");
-            xCo = xCoInput.nextInt();
             System.out.print("y: ");
+            xCo = xCoInput.nextInt();
+            System.out.print("x: ");
             yCo = yCoInput.nextInt();
             System.out.print("flag: ");
             flag = flagInput.next().charAt(0);   
-            
-            gameWon = true; //used for testing
-        }
+            gameWon = false; //used for testing
+            boolean bombFound = checkGameLost(isBomb, xCo, yCo);
+            if (bombFound == true) {
+                System.out.println("you lose");
+                break;
+            } else {
+                updateBoard(board, xCo, yCo, flag);
+                displayBoard(board, row, column);             
+            }
 
+        }
+    }
+
+    public static void updateBoard(char[][] board, int row, int column, char flag) { //dont forget, it is indexed onto 0
+        int nearbyBombs = 0;
+        if (flag == 'f' || flag == 'F') {
+            board[row][column] = 'f';
+        } else {
+            //need findNeighbours, change number into 
+
+        }
     }
 
     public static void initialiseBoard(char[][] board, int difficulty) {
@@ -132,10 +154,10 @@ public class minesweeper {
     }
 
     //bombs will be classed as X
-    public static void randomiseBombs(char[][] board, int difficulty, int row, int column) {
+    public static void randomiseBombs(char[][] board, int difficulty, int row, int column, boolean[][] isBomb) {
         //refactor your code, it looks ugly right now (to be fair, this will probably be the ugliest part)
         Random randomNumber = new Random();
-        boolean[][] isBomb = new boolean[row][column]; //true = bomb, false = no bomb.
+       // boolean[][] isBomb = new boolean[row][column]; //true = bomb, false = no bomb.
         switch (difficulty) {
             case 1: //easy
                 //default value is false
@@ -202,28 +224,28 @@ public class minesweeper {
     //finds bombs near to the coordinates given by the user
     public static int findNearbyBombs(int xCo, int yCo, int row, int column, boolean[][] isBomb) {
         int nearbyBombs = 0; //increment when there is a neighbour
-        if ((xCo - 1 >= 0) && (yCo - 1 >= 0) && (isBomb[xCo-1][yCo-1] == true)) { //NW 
+        if ((xCo - 1 >= 0) && (yCo - 1 >= 0) && (isBomb[xCo-1][yCo-1] == true)) { //NW
             nearbyBombs++;
         }
-        if ((xCo >= 0) && (yCo - 1 >= 0) && (isBomb[xCo][yCo-1] == true)) { //W
+        if ((xCo >= 0) && (yCo - 1 >= 0) && (isBomb[xCo][yCo-1] == true)) { //N
             nearbyBombs++;
         }
-        if ((xCo + 1 < row) && (yCo - 1 >= 0) && (isBomb[xCo+1][yCo-1] == true)) { //SW
+        if ((xCo + 1 < row) && (yCo - 1 >= 0) && (isBomb[xCo+1][yCo-1] == true)) { //NE
             nearbyBombs++;
         }
-        if ((xCo + 1 < row) && (yCo < column) && (isBomb[xCo+1][yCo] == true)) { //S
+        if ((xCo + 1 < row) && (yCo < column) && (isBomb[xCo+1][yCo] == true)) { //E
             nearbyBombs++;
         }
         if ((xCo + 1 < row) && (yCo + 1 < column) && (isBomb[xCo+1][yCo+1] == true)) { //SE
             nearbyBombs++;
         }
-        if ((xCo < row) && (yCo + 1 < column) && (isBomb[xCo][yCo+1] == true)) { //E
+        if ((xCo < row) && (yCo + 1 < column) && (isBomb[xCo][yCo+1] == true)) { //S
             nearbyBombs++;
         }
-        if ((xCo - 1 >= 0) && (yCo + 1 < column) && (isBomb[xCo-1][yCo+1] == true)) { //NE
+        if ((xCo - 1 >= 0) && (yCo + 1 < column) && (isBomb[xCo-1][yCo+1] == true)) { //SW
             nearbyBombs++;
         }
-        if ((xCo - 1 >= 0) && (yCo < column) && (isBomb[xCo-1][yCo] == true)) { //N
+        if ((xCo - 1 >= 0) && (yCo < column) && (isBomb[xCo-1][yCo] == true)) { //W
             nearbyBombs++;
         }	
         return nearbyBombs;
@@ -235,7 +257,7 @@ public class minesweeper {
         for (int x = 0; x < row; x++) {
             for (int y = 0; y < column; y++) {
                 if (board[x][y] != '.' || (isBomb[x][y] == true && board[x][y] == '.') ) { //might have to check the flag count as well
-                    
+                    //When won, reveal where flags should be, if they havent been put down
                 }
             }
         }
@@ -250,3 +272,4 @@ public class minesweeper {
         return bombFound;
     } 
 }
+//Do select co-ordinate then randomise bombs
