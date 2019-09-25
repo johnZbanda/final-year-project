@@ -54,24 +54,26 @@ public class minesweeper {
                     initialiseBoard(board, difficulty);
                     randomiseBombs(board, difficulty, begDiff, begDiff, isBomb);
                     displayBoard(board, begDiff, begDiff);
-                    playGame(board, begDiff, begDiff, isBomb);
+                    playGame(board, begDiff, begDiff, isBomb, difficulty);
                     //strangely enough, i think you should put playGame here, or else it'd be long having to do cases for all of them
                 } else if (difficulty == 2) {
                     char board[][] = new char[intDiff][intDiff];
+                    boolean isBomb[][] = new boolean[intDiff][intDiff];
                     initialiseBoard(board, difficulty); 
-                    //randomiseBombs(board, difficulty, intDiff, intDiff);      
+                    randomiseBombs(board, difficulty, intDiff, intDiff, isBomb);      
                     displayBoard(board, intDiff, intDiff);
                 } else if (difficulty == 3) {
                     char board[][] = new char[advDiff][advDiff];
+                    boolean isBomb[][] = new boolean[advDiff][advDiff];
                     initialiseBoard(board, difficulty);        
-                   // randomiseBombs(board, difficulty, advDiff, advDiff);   
+                    randomiseBombs(board, difficulty, advDiff, advDiff, isBomb);   
                     displayBoard(board, advDiff, advDiff);
                 }
             }
         } while (difficulty < 1 || difficulty > 4);
     }
 
-    public static void playGame(char[][] board, int row, int column, boolean[][] isBomb) { 
+    public static void playGame(char[][] board, int row, int column, boolean[][] isBomb, int difficulty) { 
         //below, should be the 
         int xCo, yCo = 0; //Difficulty, X Coordinate, Y Coordinate
         char flag;
@@ -98,23 +100,37 @@ public class minesweeper {
             boolean bombFound = checkGameLost(isBomb, xCo, yCo);
             if (bombFound == true) {
                 System.out.println("you lose");
-                break;
+                break; //should possibly go back to the menu
             } else {
-                updateBoard(board, xCo, yCo, flag);
+                updateBoard(board, xCo, yCo, flag, isBomb, difficulty);
                 displayBoard(board, row, column);             
             }
 
         }
     }
 
-    public static void updateBoard(char[][] board, int row, int column, char flag) { //dont forget, it is indexed onto 0
-        int nearbyBombs = 0;
+    public static void updateBoard(char[][] board, int row, int column, char flag, boolean[][] isBomb, int difficulty) { //dont forget, it is indexed onto 0
         if (flag == 'f' || flag == 'F') {
             board[row][column] = 'f';
         } else {
-            //need findNeighbours, change number into 
+            //need findNeighbours, change number into character
+            if (difficulty == 1) { //easy
+                changeIntToChar(board, row, column, flag, isBomb, 1);
+            } else if (difficulty == 2) {
+                changeIntToChar(board, row, column, flag, isBomb, 1);
+            } else if (difficulty == 3) {
+                changeIntToChar(board, row, column, flag, isBomb, 1);
+            }
 
         }
+    }
+
+    public static void changeIntToChar(char[][] board, int row, int column, char flag, boolean[][] isBomb, int difficulty) {
+        int nearbyBombs = 0;
+        nearbyBombs = findNearbyBombs(row, column, begDiff, begDiff, isBomb, 1);
+        char intToChar = (char) (nearbyBombs + '0');
+        System.out.println(intToChar);
+        board[row][column] = intToChar;
     }
 
     public static void initialiseBoard(char[][] board, int difficulty) {
@@ -222,7 +238,7 @@ public class minesweeper {
     }      
 
     //finds bombs near to the coordinates given by the user
-    public static int findNearbyBombs(int xCo, int yCo, int row, int column, boolean[][] isBomb) {
+    public static int findNearbyBombs(int xCo, int yCo, int row, int column, boolean[][] isBomb, int difficulty) {
         int nearbyBombs = 0; //increment when there is a neighbour
         if ((xCo - 1 >= 0) && (yCo - 1 >= 0) && (isBomb[xCo-1][yCo-1] == true)) { //NW
             nearbyBombs++;
@@ -248,6 +264,7 @@ public class minesweeper {
         if ((xCo - 1 >= 0) && (yCo < column) && (isBomb[xCo-1][yCo] == true)) { //W
             nearbyBombs++;
         }	
+
         return nearbyBombs;
     }
 
