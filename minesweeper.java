@@ -117,9 +117,9 @@ public class minesweeper {
             if (difficulty == 1) { //easy
                 changeIntToChar(board, row, column, flag, isBomb, 1);
             } else if (difficulty == 2) {
-                changeIntToChar(board, row, column, flag, isBomb, 1);
+                changeIntToChar(board, row, column, flag, isBomb, 2);
             } else if (difficulty == 3) {
-                changeIntToChar(board, row, column, flag, isBomb, 1);
+                changeIntToChar(board, row, column, flag, isBomb, 3);
             }
 
         }
