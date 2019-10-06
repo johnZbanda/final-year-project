@@ -70,6 +70,7 @@ public class minesweeper {
                     displayBoard(board, advDiff, advDiff);
                 }
             }
+            difficultyInput.close();
         } while (difficulty < 1 || difficulty > 4);
     }
 
@@ -82,13 +83,13 @@ public class minesweeper {
 
         System.out.println("");
         System.out.println("Input Coordinates after the board, put F AFTER Coordinates to input Flag - x y (F)");
-                
-       while (gameLost == false && gameWon == false) {
+        Scanner xCoInput = new Scanner(System.in);
+        Scanner yCoInput = new Scanner(System.in);
+        Scanner flagInput = new Scanner(System.in);                
+        while (gameLost == false && gameWon == false) {
             //play game here
             System.out.println("");
-            Scanner xCoInput = new Scanner(System.in);
-            Scanner yCoInput = new Scanner(System.in);
-            Scanner flagInput = new Scanner(System.in);
+
             //check game lost or won after every coord input  
             System.out.print("y: ");
             xCo = xCoInput.nextInt();
@@ -100,13 +101,18 @@ public class minesweeper {
             boolean bombFound = checkGameLost(isBomb, xCo, yCo);
             if (bombFound == true) {
                 System.out.println("you lose");
+                //display board with all x
+
                 break; //should possibly go back to the menu
             } else {
                 updateBoard(board, xCo, yCo, flag, isBomb, difficulty);
                 displayBoard(board, row, column);             
             }
-
+         
         }
+        xCoInput.close();
+        yCoInput.close();
+        flagInput.close();   
     }
 
     public static void updateBoard(char[][] board, int row, int column, char flag, boolean[][] isBomb, int difficulty) { //dont forget, it is indexed onto 0
@@ -116,20 +122,56 @@ public class minesweeper {
             //need findNeighbours, change number into character
             if (difficulty == 1) { //easy
                 changeIntToChar(board, row, column, flag, isBomb, 1);
+                zeroClause(board, row, column, flag, isBomb, 1);
             } else if (difficulty == 2) {
-                changeIntToChar(board, row, column, flag, isBomb, 1);
+                changeIntToChar(board, row, column, flag, isBomb, 2);
             } else if (difficulty == 3) {
-                changeIntToChar(board, row, column, flag, isBomb, 1);
+                changeIntToChar(board, row, column, flag, isBomb, 3);
             }
 
         }
     }
 
+    public static void zeroClause(char [][] board, int row, int column, char flag, boolean[][] isBomb, int difficulty) {
+        int nearbyBombs = findNearbyBombs(row, column, begDiff, begDiff, isBomb, 1);
+        //need a holder for the next position
+        //possibly do an array that holds it, skipping the fifth element
+        if (nearbyBombs == 0) {
+            int xCount = -1;
+            while (xCount <= 1) {
+                if (row + xCount < 0 || row + xCount > row + 1) {
+                    //if outside the boundary, don't do anything, skip everything and add one to x
+                } else {
+                    int yCount = -1;
+                    while (yCount <= 1) {
+                        if (column + yCount < 0 || column + yCount > column + 1) {
+                            //yCount++;
+                            System.out.println("yCount up: " + yCount);
+                        } else {
+                        //create new array here 
+                            int checkNext = findNearbyBombs(row + xCount, column + yCount, begDiff, begDiff, isBomb, 1);
+                            if (checkNext == 0) { 
+                                System.out.println("check - x: " + (row + xCount) + " y: " + (column + yCount));
+
+                                changeIntToChar(board, row + xCount, column + yCount, flag, isBomb, difficulty);
+                                //break;
+                            } else {
+                                changeIntToChar(board, row + xCount, column + yCount, flag, isBomb, difficulty);
+                            }
+                         
+                        }
+                        yCount++;  
+                    }                                                          
+                }
+                xCount++;
+            }
+        }
+
+    }
+
     public static void changeIntToChar(char[][] board, int row, int column, char flag, boolean[][] isBomb, int difficulty) {
-        int nearbyBombs = 0;
-        nearbyBombs = findNearbyBombs(row, column, begDiff, begDiff, isBomb, 1);
+        int nearbyBombs = findNearbyBombs(row, column, begDiff, begDiff, isBomb, 1);
         char intToChar = (char) (nearbyBombs + '0');
-        System.out.println(intToChar);
         board[row][column] = intToChar;
     }
 
