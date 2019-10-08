@@ -121,12 +121,12 @@ public class minesweeper {
         } else {
             //need findNeighbours, change number into character
             if (difficulty == 1) { //easy
-                changeIntToChar(board, row, column, flag, isBomb, 1);
-                zeroClause(board, row, column, flag, isBomb, 1);
+                changeIntToChar(board, row, column, flag, isBomb, difficulty);
+                zeroClause(board, row, column, flag, isBomb, difficulty);
             } else if (difficulty == 2) {
-                changeIntToChar(board, row, column, flag, isBomb, 2);
+                changeIntToChar(board, row, column, flag, isBomb, difficulty);
             } else if (difficulty == 3) {
-                changeIntToChar(board, row, column, flag, isBomb, 3);
+                changeIntToChar(board, row, column, flag, isBomb, difficulty);
             }
 
         }
@@ -136,31 +136,49 @@ public class minesweeper {
         int nearbyBombs = findNearbyBombs(row, column, begDiff, begDiff, isBomb, 1);
         //need a holder for the next position
         //possibly do an array that holds it, skipping the fifth element
+        //column is the row for some reason????
         if (nearbyBombs == 0) {
             int xCount = -1;
             while (xCount <= 1) {
-                if (row + xCount < 0 || row + xCount > row + 1) {
+                if (row + xCount < 0 || row + xCount > row + 1) { //> end of array
                     //if outside the boundary, don't do anything, skip everything and add one to x
                 } else {
                     int yCount = -1;
                     while (yCount <= 1) {
                         if (column + yCount < 0 || column + yCount > column + 1) {
-                            //yCount++;
-                            System.out.println("yCount up: " + yCount);
-                        } else {
-                        //create new array here 
-                            int checkNext = findNearbyBombs(row + xCount, column + yCount, begDiff, begDiff, isBomb, 1);
-                            if (checkNext == 0) { 
-                                System.out.println("check - x: " + (row + xCount) + " y: " + (column + yCount));
 
-                                changeIntToChar(board, row + xCount, column + yCount, flag, isBomb, difficulty);
-                                //break;
+                        } else {
+
+                            if (((row + xCount) >= begDiff) || ((column + yCount) >= begDiff)) {
+
                             } else {
-                                changeIntToChar(board, row + xCount, column + yCount, flag, isBomb, difficulty);
+                                int checkNext = findNearbyBombs(row + xCount, column + yCount, begDiff, begDiff, isBomb, 1);
+    
+                                if (board[row + xCount][column + yCount] == 'f') {
+
+                                } else if (checkNext == 0) {  //here is the issue with the out of bounds
+
+                                    if (board[row + xCount][column + yCount] == '.') {
+
+                                        changeIntToChar(board, row + xCount, column + yCount, flag, isBomb, difficulty);
+                                        //zeroClause(board, row + xCount, column + yCount, flag, isBomb, difficulty); 
+                                        
+                                        if (column + yCount > begDiff - 1 || column + yCount < 0) {
+                                            zeroClause(board, row - 1, column, flag, isBomb, difficulty);
+                                        } else if (row + xCount > begDiff - 1 || column + yCount < 0) {
+                                            zeroClause(board, row, column - 1, flag, isBomb, difficulty);    
+                                        } else {
+                                            zeroClause(board, row + xCount, column + yCount, flag, isBomb, difficulty); 
+                                        }
+                                        
+                                    }
+                                } else {
+                                    changeIntToChar(board, row + xCount, column + yCount, flag, isBomb, difficulty);
+                                } 
                             }
-                         
+                        
                         }
-                        yCount++;  
+                        yCount++;
                     }                                                          
                 }
                 xCount++;
@@ -331,4 +349,3 @@ public class minesweeper {
         return bombFound;
     } 
 }
-//Do select co-ordinate then randomise bombs
