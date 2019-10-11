@@ -4,7 +4,7 @@ public class minesweeper {
 
     //list of things to do
     
-    /*
+    /* Pretty much complete
     - Initialise the board for different difficulties - Done
     - Play the game (multiple sub sections) - started
     . Click (or type) a space
@@ -22,7 +22,11 @@ public class minesweeper {
     - Keep high score on those profiles
     - Let users create their own minesweeper board (hard)
     - Multiplayer Minesweeper
-    - Possibly implement into an app
+    - Possibly implement into an app - Definitely
+    - UI design, different backgrounds (underwater, space, flowery, Halloween, etc) -> FLO'S IDEA
+    - Sessions on Web application
+    - Hint system
+    - Custom games
     */
 
     //these values will never change
