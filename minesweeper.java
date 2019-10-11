@@ -62,12 +62,14 @@ public class minesweeper {
                     initialiseBoard(board, difficulty); 
                     randomiseBombs(board, difficulty, intDiff, intDiff, isBomb);      
                     displayBoard(board, intDiff, intDiff);
+                    playGame(board, intDiff, intDiff, isBomb, difficulty);
                 } else if (difficulty == 3) {
                     char board[][] = new char[advDiff][advDiff];
                     boolean isBomb[][] = new boolean[advDiff][advDiff];
                     initialiseBoard(board, difficulty);        
                     randomiseBombs(board, difficulty, advDiff, advDiff, isBomb);   
                     displayBoard(board, advDiff, advDiff);
+                    playGame(board, advDiff, advDiff, isBomb, difficulty);
                 }
             }
             difficultyInput.close();
@@ -125,15 +127,28 @@ public class minesweeper {
                 zeroClause(board, row, column, flag, isBomb, difficulty);
             } else if (difficulty == 2) {
                 changeIntToChar(board, row, column, flag, isBomb, difficulty);
+                zeroClause(board, row, column, flag, isBomb, difficulty);
             } else if (difficulty == 3) {
                 changeIntToChar(board, row, column, flag, isBomb, difficulty);
+                zeroClause(board, row, column, flag, isBomb, difficulty);
             }
 
         }
     }
 
     public static void zeroClause(char [][] board, int row, int column, char flag, boolean[][] isBomb, int difficulty) {
-        int nearbyBombs = findNearbyBombs(row, column, begDiff, begDiff, isBomb, 1);
+        int nearbyBombs = 0;
+        int setDifficulty = 0; //used to determine the number of bombs dependant on difficulty
+        if (difficulty == 1) {
+            nearbyBombs = findNearbyBombs(row, column, begDiff, begDiff, isBomb, difficulty);
+            setDifficulty = begDiff;
+        } else if (difficulty == 2) {
+            nearbyBombs = findNearbyBombs(row, column, intDiff, intDiff, isBomb, difficulty);
+            setDifficulty = intDiff;
+        } else if (difficulty == 3) {
+            nearbyBombs = findNearbyBombs(row, column, advDiff, advDiff, isBomb, difficulty);
+            setDifficulty = advDiff;
+        }
         //need a holder for the next position
         //possibly do an array that holds it, skipping the fifth element
         //column is the row for some reason????
@@ -149,23 +164,23 @@ public class minesweeper {
 
                         } else {
 
-                            if (((row + xCount) >= begDiff) || ((column + yCount) >= begDiff)) {
+                            if (((row + xCount) >= setDifficulty) || ((column + yCount) >= setDifficulty)) {
 
                             } else {
-                                int checkNext = findNearbyBombs(row + xCount, column + yCount, begDiff, begDiff, isBomb, 1);
-    
+                                int checkNext = findNearbyBombs(row + xCount, column + yCount, setDifficulty, setDifficulty, isBomb, difficulty);
+
                                 if (board[row + xCount][column + yCount] == 'f') {
 
-                                } else if (checkNext == 0) {  //here is the issue with the out of bounds
+                                } else if (checkNext == 0) {  
 
                                     if (board[row + xCount][column + yCount] == '.') {
 
                                         changeIntToChar(board, row + xCount, column + yCount, flag, isBomb, difficulty);
                                         //zeroClause(board, row + xCount, column + yCount, flag, isBomb, difficulty); 
                                         
-                                        if (column + yCount > begDiff - 1 || column + yCount < 0) {
+                                        if (column + yCount > setDifficulty - 1 || column + yCount < 0) {
                                             zeroClause(board, row - 1, column, flag, isBomb, difficulty);
-                                        } else if (row + xCount > begDiff - 1 || column + yCount < 0) {
+                                        } else if (row + xCount > setDifficulty - 1 || column + yCount < 0) {
                                             zeroClause(board, row, column - 1, flag, isBomb, difficulty);    
                                         } else {
                                             zeroClause(board, row + xCount, column + yCount, flag, isBomb, difficulty); 
@@ -183,12 +198,21 @@ public class minesweeper {
                 }
                 xCount++;
             }
+        } else {
+            changeIntToChar(board, row, column, flag, isBomb, difficulty);
         }
 
     }
 
     public static void changeIntToChar(char[][] board, int row, int column, char flag, boolean[][] isBomb, int difficulty) {
-        int nearbyBombs = findNearbyBombs(row, column, begDiff, begDiff, isBomb, 1);
+        int nearbyBombs = 0;
+        if (difficulty == 1) {
+            nearbyBombs = findNearbyBombs(row, column, begDiff, begDiff, isBomb, difficulty);
+        } else if (difficulty == 2) {
+            nearbyBombs = findNearbyBombs(row, column, intDiff, intDiff, isBomb, difficulty);
+        } else if (difficulty == 3) {
+            nearbyBombs = findNearbyBombs(row, column, advDiff, advDiff, isBomb, difficulty);
+        }  
         char intToChar = (char) (nearbyBombs + '0');
         board[row][column] = intToChar;
     }
@@ -201,6 +225,7 @@ public class minesweeper {
                     for (column = 0; column < begDiff; column++) {
                         board[row][column] = '.';
                     }
+
                 }
                 break;
             case 2:
