@@ -88,7 +88,7 @@ public class minesweeper {
         Scanner xCoInput = new Scanner(System.in);
         Scanner yCoInput = new Scanner(System.in);
         Scanner flagInput = new Scanner(System.in);                
-        while (gameLost == false && gameWon == false) {
+        while (gameLost == false || gameWon == false) {
             //play game here
             System.out.println("");
 
@@ -101,11 +101,20 @@ public class minesweeper {
             flag = flagInput.next().charAt(0);   
             gameWon = false; //used for testing
             boolean bombFound = checkGameLost(isBomb, xCo, yCo);
+            gameWon = checkGameWon(board, row, column, isBomb, difficulty);
             if (bombFound == true) {
+                displayLostBoard(board, row, column, difficulty, isBomb);
                 System.out.println("you lose");
-                //display board with all x
+                //display board with all x, comment 277 298 and last one to hide bombs
+                //dont reveal numbers
 
                 break; //should possibly go back to the menu
+            } else if (gameWon == true) {
+                displayWinBoard(board, row, column, difficulty, isBomb);
+                System.out.println("you win");
+                //place flags where bombs are if there aren't
+                //all numbers will be revealed by now
+                break;
             } else {
                 updateBoard(board, xCo, yCo, flag, isBomb, difficulty);
                 displayBoard(board, row, column);             
@@ -117,9 +126,62 @@ public class minesweeper {
         flagInput.close();   
     }
 
+    public static void displayWinBoard(char[][] board, int row, int column, int difficulty, boolean[][] isBomb) {
+        int setDimensions = 0;
+        if (difficulty == 1) {
+            setDimensions = begDiff;
+        } else if (difficulty == 2) {
+            setDimensions = intDiff;
+        } else if (difficulty == 3) {
+            setDimensions = advDiff;
+        }
+
+        for (int x = 0; x < setDimensions; x++) {
+            System.out.println("");
+            for (int y= 0; y < setDimensions; y++ ) {
+                if (board[x][y] != 'f' && isBomb[x][y] == true) {
+                    board[x][y] = 'f';
+                    System.out.print(board[x][y]);
+                } else {
+                    System.out.print(board[x][y]);
+                }
+            }
+        }
+        System.out.println();
+    }
+
+    public static void displayLostBoard(char[][] board, int row, int column, int difficulty, boolean[][] isBomb) {
+        int setDimensions = 0;
+        if (difficulty == 1) {
+            setDimensions = begDiff;
+        } else if (difficulty == 2) {
+            setDimensions = intDiff;
+        } else if (difficulty == 3) {
+            setDimensions = advDiff;
+        }
+
+        for (int x = 0; x < setDimensions; x++) {
+            System.out.println("");
+            for (int y= 0; y < setDimensions; y++ ) {
+                if (board[x][y] == '.' && isBomb[x][y] == true) {
+                    board[x][y] = 'x';
+                    System.out.print(board[x][y]);
+                } else if (board[x][y] == 'f' && isBomb[x][y] == false) {
+                    board[x][y] = 'w'; //there is no bomb under the flag
+                    System.out.print(board[x][y]);
+                } else {
+                    System.out.print(board[x][y]);
+                }
+            }
+        }
+        System.out.println("");
+    }
+
     public static void updateBoard(char[][] board, int row, int column, char flag, boolean[][] isBomb, int difficulty) { //dont forget, it is indexed onto 0
-        if (flag == 'f' || flag == 'F') {
+        if ((flag == 'f' || flag == 'F') && board[row][column] == '.') { //changes to f, if no flag is there
             board[row][column] = 'f';
+        } else if ((flag == 'f' || flag == 'F') && board[row][column] == 'f') { //changes back to '.' if they select f while it is f 
+            board[row][column] = '.';
         } else {
             //need findNeighbours, change number into character
             if (difficulty == 1) { //easy
@@ -269,7 +331,7 @@ public class minesweeper {
                         placeBombs--;
                     } else {
                         isBomb[randomRow][randomColumn] = true; //get this value, and update somewhere
-                        board[randomRow][randomColumn] = 'x';
+                        //board[randomRow][randomColumn] = 'x'; //comment this to hide the bombs
                         if (isBomb[0][0] == true || isBomb[0][column - 1] == true || isBomb[row - 1][0] == true || isBomb[row - 1][column - 1] == true) {
                             //to ensure no outofarray exceptions, -1 to row and column
                             placeBombs--;
@@ -289,7 +351,7 @@ public class minesweeper {
                         placeBombs--;
                     } else {
                         isBomb[randomRow][randomColumn] = true; //get this value, and update somewhere
-                        board[randomRow][randomColumn] = 'x';
+                        //board[randomRow][randomColumn] = 'x';
                         if (isBomb[0][0] == true || isBomb[0][column - 1] == true || isBomb[row - 1][0] == true || isBomb[row - 1][column - 1] == true) {
                             //to ensure no outofarray exceptions, -1 to row and column
                             placeBombs--;
@@ -309,7 +371,7 @@ public class minesweeper {
                         placeBombs--;
                     } else {
                         isBomb[randomRow][randomColumn] = true; //get this value, and update somewhere
-                        board[randomRow][randomColumn] = 'x';
+                        //board[randomRow][randomColumn] = 'x';
                         if (isBomb[0][0] == true || isBomb[0][column - 1] == true || isBomb[row - 1][0] == true || isBomb[row - 1][column - 1] == true) {
                             //to ensure no outofarray exceptions, -1 to row and column
                             placeBombs--;
@@ -353,17 +415,32 @@ public class minesweeper {
         return nearbyBombs;
     }
 
-    public static boolean checkGameWon(char[][] board, int row, int column, boolean[][] isBomb) { //slightly complex
+    public static boolean checkGameWon(char[][] board, int row, int column, boolean[][] isBomb, int difficulty) { //slightly complex
         //if all numbers have been revealed. iterate through every position, check if the value is not .
-        
+        int winCounter = 0;
+        int setDifficulty = 0; //used to determine the number of bombs dependant on difficulty
+        if (difficulty == 1) {
+            setDifficulty = begDiff;
+        } else if (difficulty == 2) {
+            setDifficulty = intDiff;
+        } else if (difficulty == 3) {
+            setDifficulty = advDiff;
+        }
+
+        boolean gameWon = false;
         for (int x = 0; x < row; x++) {
             for (int y = 0; y < column; y++) {
-                if (board[x][y] != '.' || (isBomb[x][y] == true && board[x][y] == '.') ) { //might have to check the flag count as well
-                    //When won, reveal where flags should be, if they havent been put down
+                if (board[x][y] != '.' || (isBomb[x][y] == true && board[x][y] == 'x')) { //might have to check the flag count as well
+                    winCounter++; //used to hold a counter for winning the game
                 }
             }
         }
-        return true;
+
+
+        if (winCounter == ((setDifficulty * setDifficulty) + 1)) {
+            gameWon = true;
+        }
+        return gameWon;
     }
 
     public static boolean checkGameLost(boolean[][] isBomb, int xCo, int yCo) {
