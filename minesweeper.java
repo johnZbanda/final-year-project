@@ -1,4 +1,5 @@
 import java.util.*;
+//import javax.swing.JPanel;
 //This will be the refactored version of Minesweeper
 
 //Will write the correct terms for certain software skills as well
@@ -12,7 +13,11 @@ public class Minesweeper {
     final static int intMines = 40;
     final static int advMines = 99;
 
-    public static void main (String [] args) {
+    public Minesweeper() { //constructor
+
+    }
+    public static void main (String [] args){
+        //GameWindow gameWindow = new GameWindow();
         int dimensions = 0;
         int difficulty = 0;
         int mines = 0;
