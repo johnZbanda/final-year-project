@@ -1,273 +1,230 @@
 import java.util.*;
+//This will be the refactored version of Minesweeper
 
-public class minesweeper {
+//Will write the correct terms for certain software skills as well
+public class Minesweeper {
 
-    //list of things to do
-    
-    /*
-    - Initialise the board for different difficulties - Done
-    - Play the game (multiple sub sections) - started
-    . Click (or type) a space
-    . indicate how many bombs are nearby
-    . Game Over if bomb is found
-    . Reveal the numbers after typing
-    . Create constraints
-    . 
-    */
+    //Singleton for dimensions and mines
+    final static int begDimension = 9;
+    final static int intDimension = 16;
+    final static int advDimension = 24;
+    final static int begMines = 10;
+    final static int intMines = 40;
+    final static int advMines = 99;
 
-    //extra stuff
-
-    /*
-    - Create different profiles
-    - Keep high score on those profiles
-    - Let users create their own minesweeper board (hard)
-    - Multiplayer Minesweeper
-    - Possibly implement into an app
-    */
-
-    //these values will never change
-    final static int begDiff = 9; //dimensions for beginner 9*9
-    final static int intDiff = 16; //dimensions for intermediate 16*16
-    final static int advDiff = 24; //dimensions for advanced 24*24
-    final static int begBombs = 10; //bombs for beginner 10
-    final static int intBombs = 40; //bombs for intermediate  40
-    final static int advBombs = 99; //bombs for advanced 99
-
-    public static void main(String[] args) {
+    public static void main (String [] args) {
+        int dimensions = 0;
         int difficulty = 0;
+        int mines = 0;
         do {
-            Scanner difficultyInput = new Scanner(System.in);
-            System.out.println("Select a difficulty");
-            System.out.println("1 - Beginner, 2 - Intermediate, 3 - Advanced");
+            Scanner setDifficulty = new Scanner(System.in);
+            System.out.println("-------Select a difficulty----------");
+            System.out.println("1 - Begginer, 2 - Intermediate, 3 - Advanced");
             System.out.print("Input here: ");
-            //let user choose the difficulty via. an integer 1=Beginner, 2=Intermediate, 3=Advanced
-            difficulty = difficultyInput.nextInt(); //possibly refactor so its function
-            //user input here
+            //Error Check to see correct input here
+            difficulty = setDifficulty.nextInt();
             if (difficulty < 1 || difficulty > 4) {
-                //invalid input, error message
-                System.out.println("That is not apart of the options. Please select again.");
-                System.out.println(); 
-            } else {
-                if (difficulty == 1) {
-                    char board[][] = new char[begDiff][begDiff];
-                    boolean isBomb[][] = new boolean[begDiff][begDiff];
-                    initialiseBoard(board, difficulty);
-                    randomiseBombs(board, difficulty, begDiff, begDiff, isBomb);
-                    displayBoard(board, begDiff, begDiff);
-                    playGame(board, begDiff, begDiff, isBomb, difficulty);
-                    //strangely enough, i think you should put playGame here, or else it'd be long having to do cases for all of them
-                } else if (difficulty == 2) {
-                    char board[][] = new char[intDiff][intDiff];
-                    boolean isBomb[][] = new boolean[intDiff][intDiff];
-                    initialiseBoard(board, difficulty); 
-                    randomiseBombs(board, difficulty, intDiff, intDiff, isBomb);      
-                    displayBoard(board, intDiff, intDiff);
-                } else if (difficulty == 3) {
-                    char board[][] = new char[advDiff][advDiff];
-                    boolean isBomb[][] = new boolean[advDiff][advDiff];
-                    initialiseBoard(board, difficulty);        
-                    randomiseBombs(board, difficulty, advDiff, advDiff, isBomb);   
-                    displayBoard(board, advDiff, advDiff);
+                System.out.println("INCORRECT INPUT. PLEASE CHOOSE AGAIN \r\n");
+            } else { //set dimension and the mines for the board
+                switch (difficulty) {
+                    case 1: 
+                        dimensions = begDimension;
+                        mines = begMines;
+                        break;
+                    case 2:
+                        dimensions = intDimension;
+                        mines = intMines;
+                        break;
+                    case 3:
+                        dimensions = advDimension;
+                        mines = advMines;
+                        break;
                 }
+                char board[][] = new char[dimensions][dimensions];
+                boolean isMine[][] = new boolean[mines][mines];
+                initBoard(board, dimensions);
+                initMines(board, isMine, dimensions, mines);
+                displayBoard(board, dimensions);
+                playGame(board, dimensions, isMine);
+                //initialise board, mines, show display, play the game
             }
-        } while (difficulty < 1 || difficulty > 4);
+        } while (difficulty < 1 || difficulty > 4); 
     }
 
-    public static void playGame(char[][] board, int row, int column, boolean[][] isBomb, int difficulty) { 
-        //below, should be the 
-        int xCo, yCo = 0; //Difficulty, X Coordinate, Y Coordinate
+    public static void playGame(char[][]  board, int dimensions, boolean[][] isMine) {
+        int row, column = 0; //this will be the input
         char flag;
         boolean gameWon = false;
         boolean gameLost = false;
 
-        System.out.println("");
-        System.out.println("Input Coordinates after the board, put F AFTER Coordinates to input Flag - x y (F)");
-                
-       while (gameLost == false && gameWon == false) {
-            //play game here
-            System.out.println("");
-            Scanner xCoInput = new Scanner(System.in);
-            Scanner yCoInput = new Scanner(System.in);
-            Scanner flagInput = new Scanner(System.in);
-            //check game lost or won after every coord input  
+        System.out.println("Input Coordinates.\r\n F to input a Flag, Anything to input no flag\r\n x y (F)\r\n");
+        Scanner x = new Scanner(System.in);
+        Scanner y = new Scanner(System.in);
+        Scanner f = new Scanner(System.in);
+
+        while (gameLost == false || gameWon == false) {
+            //Input needed
             System.out.print("y: ");
-            xCo = xCoInput.nextInt();
+            row = x.nextInt();
             System.out.print("x: ");
-            yCo = yCoInput.nextInt();
-            System.out.print("flag: ");
-            flag = flagInput.next().charAt(0);   
-            gameWon = false; //used for testing
-            boolean bombFound = checkGameLost(isBomb, xCo, yCo);
-            if (bombFound == true) {
-                System.out.println("you lose");
-                break; //should possibly go back to the menu
+            column = y.nextInt();
+            System.out.print("Flag: ");
+            flag = f.next().charAt(0);
+
+            gameLost = checkGameLost(isMine, row, column);
+            gameWon = checkGameWon(board, dimensions, isMine);
+
+            if (gameLost == true) {
+                displayLostBoard(board, dimensions, isMine);
+                System.out.println("You Lose! You found a Mine at " + row + "," + column);
+                break;
+            } else if (gameWon == true) {
+                displayWinBoard(board, dimensions, isMine);
+                System.out.println("CONGRATULATIONS!!! YOU WON!!!");
+                break;
             } else {
-                updateBoard(board, xCo, yCo, flag, isBomb, difficulty);
-                displayBoard(board, row, column);             
+                updateBoard(board, dimensions, row, column, flag, isMine);
+                displayBoard(board, dimensions);
             }
-
         }
+        //may need to close inputs
     }
 
-    public static void updateBoard(char[][] board, int row, int column, char flag, boolean[][] isBomb, int difficulty) { //dont forget, it is indexed onto 0
-        if (flag == 'f' || flag == 'F') {
+    public static void displayWinBoard(char[][] board, int dimensions, boolean[][] isMine) {
+        for (int x = 0; x < dimensions; x++) {
+            System.out.println();
+            for (int y = 0; y < dimensions; y++) {
+                if (board[x][y] != 'f' && isMine[x][y] == true) {
+                    board[x][y] = 'f';
+                    System.out.print(board[x][y]);
+                } else {
+                    System.out.print(board[x][y]);
+                }
+            }
+        }
+        System.out.println();
+    }
+
+    public static void displayLostBoard(char[][] board, int dimensions, boolean[][] isMine) {
+        for (int x = 0; x < dimensions; x++) {
+            System.out.println();
+            for (int y = 0; y < dimensions; y++) {
+                if (board[x][y] == '-' && isMine[x][y] == true) {
+                    board[x][y] = 'X';
+                    System.out.print(board[x][y]);
+                } else if (board[x][y] == 'f' && isMine[x][y] == false) {
+                    board[x][y] = 'w'; //indicates that this flag was in the wrong position
+                    System.out.print(board[x][y]);
+                } else {
+                    System.out.print(board[x][y]);
+                }
+            }
+        }
+        System.out.println();
+    }
+
+    public static void updateBoard(char[][] board, int dimensions, int row, int column, char flag, boolean[][] isMine) {
+        if ((flag == 'f' || flag == 'F') && board[row][column] == '-') {
             board[row][column] = 'f';
+        } else if ((flag == 'f' || flag == 'F') && board[row][column] == 'f') {
+            board[row][column] = '-';
         } else {
-            //need findNeighbours, change number into character
-            if (difficulty == 1) { //easy
-                changeIntToChar(board, row, column, flag, isBomb, 1);
-            } else if (difficulty == 2) {
-                changeIntToChar(board, row, column, flag, isBomb, 2);
-            } else if (difficulty == 3) {
-                changeIntToChar(board, row, column, flag, isBomb, 3);
-            }
-
+            changeIntToChar(board, dimensions, row, column, isMine);
+            zeroClause(board, dimensions, row, column, flag, isMine);
         }
     }
 
-    public static void changeIntToChar(char[][] board, int row, int column, char flag, boolean[][] isBomb, int difficulty) {
-        int nearbyBombs = 0;
-        nearbyBombs = findNearbyBombs(row, column, begDiff, begDiff, isBomb, 1);
-        char intToChar = (char) (nearbyBombs + '0');
-        System.out.println(intToChar);
+    public static void zeroClause(char[][] board, int dimensions, int row, int column, int flag, boolean[][] isMine) {
+        int nearbyMines = 0;
+        nearbyMines = findNearbyMines(row, column, dimensions, isMine);
+        if (nearbyMines == 0) {
+            int x = -1;
+            while (x <= 1) {
+                if (row + x < 0 || row + x > row + 1) {
+
+                } else {
+                    int y = -1;
+                    while (y <= 1) {
+                        if (column + y < 0 || column + y > column + 1) {
+
+                        } else {
+                            if (row + x >= dimensions || column + y >= dimensions) {
+
+                            } else {
+                                int checkNext = findNearbyMines(row + x, column + y, dimensions, isMine);
+                                if (board[row + x][column + y] == 'f') {
+
+                                } else if (checkNext == 0) {
+                                    if (board[row + x][column + y] == '-') {
+                                        changeIntToChar(board, dimensions, row + x, column + y, isMine);
+                                        if (column + y > dimensions - 1 || column + y < 0) {
+                                            zeroClause(board, dimensions, row - 1, column, flag, isMine);
+                                        } else if (row + x > dimensions - 1 || row + x < 0) {
+                                            zeroClause(board, dimensions, row, column - 1, flag, isMine);
+                                        } else {
+                                            zeroClause(board, dimensions, row + x, column + y, flag, isMine);
+                                        }
+                                    }
+                                } else {
+                                    changeIntToChar(board, dimensions, row + x, column + y, isMine);
+                                }
+                            }
+                        }
+                        y++;
+                    }
+                }
+                x++;
+            }
+        } else {
+            changeIntToChar(board, dimensions, row, column, isMine);
+        }
+    }
+
+    public static void changeIntToChar(char[][] board, int dimensions, int row, int column, boolean[][] isMine) {
+        int nearbyMines = 0;
+        nearbyMines = findNearbyMines(row, column, dimensions, isMine);
+        char intToChar = (char) (nearbyMines + '0');
         board[row][column] = intToChar;
     }
 
-    public static void initialiseBoard(char[][] board, int difficulty) {
-        int row, column;
-        switch (difficulty) {
-            case 1:
-                for (row = 0; row < begDiff; row++) {
-                    for (column = 0; column < begDiff; column++) {
-                        board[row][column] = '.';
-                    }
-                }
-                break;
-            case 2:
-                for (row = 0; row < intDiff; row++) {
-                    for (column = 0; column < intDiff; column++) {
-                        board[row][column] = '.';
-                    }
-                }
-                break;
-            case 3:
-                for (row = 0; row < advDiff; row++) {
-                    for (column = 0; column < advDiff; column++) {
-                        board[row][column] = '.';
-                    }
-                }
-                break;
+    public static int findNearbyMines(int row, int column, int dimensions, boolean[][] isMine) {
+        int nearbyMines = 0;
+        if ((row - 1 >= 0) && (column - 1 >= 0) && (isMine[row-1][column-1] == true)) { //NW - TL
+            nearbyMines++;
         }
-    } 
-    //similar code to gameOfLife finding neighbour for bombs
-    public static void displayBoard(char[][] board, int row, int column) { //outputs the board
-        for (int x = 0; x < row; x++) {
-            System.out.println();
-            for (int y = 0; y < column; y++) {
-                System.out.print(board[x][y]);
+        if ((row >= 0) && (column - 1 >= 0) && (isMine[row][column-1] == true)) { //N - T
+            nearbyMines++;
+        }
+        if ((row + 1 < dimensions) && (column - 1 >= 0) && (isMine[row+1][column-1] == true)) { //NE - TR
+            nearbyMines++;
+        }
+        if ((row + 1 >= 0) && (column < dimensions) && (isMine[row+1][column] == true)) { //E - R
+            nearbyMines++;
+        }
+        if ((row + 1 < dimensions) && (column + 1 < dimensions) && (isMine[row+1][column+1] == true)) { //SE - BR
+            nearbyMines++;
+        }
+        if ((row < dimensions) && (column + 1 < dimensions) && (isMine[row][column+1] == true)) { //S - B
+            nearbyMines++;
+        }
+        if ((row - 1 >= 0) && (column + 1 < dimensions) && (isMine[row-1][column+1] == true)) { //SW + BL
+            nearbyMines++;
+        }
+        if ((row - 1 >= 0) && (column < dimensions) && (isMine[row-1][column] == true)) { //NW - TL
+            nearbyMines++;
+        }
+        return nearbyMines;
+    }
+
+    public static void initBoard(char[][] board, int dimensions) { //initialise board
+        for (int row = 0; row < dimensions; row++) {
+            for (int column = 0; column < dimensions; column++) {
+                board[row][column] = '-';
             }
         }
     }
 
-    //bombs will be classed as X
-    public static void randomiseBombs(char[][] board, int difficulty, int row, int column, boolean[][] isBomb) {
-        //refactor your code, it looks ugly right now (to be fair, this will probably be the ugliest part)
-        Random randomNumber = new Random();
-       // boolean[][] isBomb = new boolean[row][column]; //true = bomb, false = no bomb.
-        switch (difficulty) {
-            case 1: //easy
-                //default value is false
-                for (int placeBombs = 0; placeBombs < begBombs; placeBombs++) {
-                    int randomRow = randomNumber.nextInt(begDiff);
-                    int randomColumn = randomNumber.nextInt(begDiff);
-                    if (isBomb[randomRow][randomColumn] == true) {
-                        placeBombs--;
-                    } else {
-                        isBomb[randomRow][randomColumn] = true; //get this value, and update somewhere
-                        board[randomRow][randomColumn] = 'x';
-                        if (isBomb[0][0] == true || isBomb[0][column - 1] == true || isBomb[row - 1][0] == true || isBomb[row - 1][column - 1] == true) {
-                            //to ensure no outofarray exceptions, -1 to row and column
-                            placeBombs--;
-                            board[randomRow][randomColumn] = '.';
-                            isBomb[randomRow][randomColumn] = false;
-                        }
-                    }
-                }
-                break;
-            
-            case 2: //intermediate
-                //default value is false
-                for (int placeBombs = 0; placeBombs < intBombs; placeBombs++) {
-                    int randomRow = randomNumber.nextInt(intDiff);
-                    int randomColumn = randomNumber.nextInt(intDiff);
-                    if (isBomb[randomRow][randomColumn] == true) {
-                        placeBombs--;
-                    } else {
-                        isBomb[randomRow][randomColumn] = true; //get this value, and update somewhere
-                        board[randomRow][randomColumn] = 'x';
-                        if (isBomb[0][0] == true || isBomb[0][column - 1] == true || isBomb[row - 1][0] == true || isBomb[row - 1][column - 1] == true) {
-                            //to ensure no outofarray exceptions, -1 to row and column
-                            placeBombs--;
-                            board[randomRow][randomColumn] = '.';
-                            isBomb[randomRow][randomColumn] = false;
-                        }
-                    }
-                }
-                break; 
-            
-            case 3: //advanced
-                //default value is false
-                for (int placeBombs = 0; placeBombs < advBombs; placeBombs++) {
-                    int randomRow = randomNumber.nextInt(advDiff);
-                    int randomColumn = randomNumber.nextInt(advDiff);
-                    if (isBomb[randomRow][randomColumn] == true) {
-                        placeBombs--;
-                    } else {
-                        isBomb[randomRow][randomColumn] = true; //get this value, and update somewhere
-                        board[randomRow][randomColumn] = 'x';
-                        if (isBomb[0][0] == true || isBomb[0][column - 1] == true || isBomb[row - 1][0] == true || isBomb[row - 1][column - 1] == true) {
-                            //to ensure no outofarray exceptions, -1 to row and column
-                            placeBombs--;
-                            board[randomRow][randomColumn] = '.';
-                            isBomb[randomRow][randomColumn] = false;
-                        }
-                    }
-                }
-                break; 
-        }
-    }      
-
-    //finds bombs near to the coordinates given by the user
-    public static int findNearbyBombs(int xCo, int yCo, int row, int column, boolean[][] isBomb, int difficulty) {
-        int nearbyBombs = 0; //increment when there is a neighbour
-        if ((xCo - 1 >= 0) && (yCo - 1 >= 0) && (isBomb[xCo-1][yCo-1] == true)) { //NW
-            nearbyBombs++;
-        }
-        if ((xCo >= 0) && (yCo - 1 >= 0) && (isBomb[xCo][yCo-1] == true)) { //N
-            nearbyBombs++;
-        }
-        if ((xCo + 1 < row) && (yCo - 1 >= 0) && (isBomb[xCo+1][yCo-1] == true)) { //NE
-            nearbyBombs++;
-        }
-        if ((xCo + 1 < row) && (yCo < column) && (isBomb[xCo+1][yCo] == true)) { //E
-            nearbyBombs++;
-        }
-        if ((xCo + 1 < row) && (yCo + 1 < column) && (isBomb[xCo+1][yCo+1] == true)) { //SE
-            nearbyBombs++;
-        }
-        if ((xCo < row) && (yCo + 1 < column) && (isBomb[xCo][yCo+1] == true)) { //S
-            nearbyBombs++;
-        }
-        if ((xCo - 1 >= 0) && (yCo + 1 < column) && (isBomb[xCo-1][yCo+1] == true)) { //SW
-            nearbyBombs++;
-        }
-        if ((xCo - 1 >= 0) && (yCo < column) && (isBomb[xCo-1][yCo] == true)) { //W
-            nearbyBombs++;
-        }	
-
-        return nearbyBombs;
-    }
-
+<<<<<<< HEAD
     public static boolean checkGameWon(char[][] board, int row, int column, boolean[][] isBomb) { //slightly complex
         //if all numbers have been revealed. iterate through every position, check if the value is not .
         //this is still very weird, look over again - 01/10/2019
@@ -282,19 +239,66 @@ public class minesweeper {
                             }
                         }
                     }
+=======
+    public static void displayBoard(char[][] board, int dimensions) { //display board
+        System.out.println("");
+        for (int x = 0; x < dimensions; x++) { //row and column are the dimensions but it does not make sense
+            //sort out numbers on top or below
+            for (int y = 0; y < dimensions; y++) {
+                System.out.print(board[x][y]);
+            }
+            System.out.print(" " + x + "\r\n"); //puts numbers on the right
+        }
+        System.out.println("");
+    }
+
+    public static void initMines(char board[][], boolean[][] isMine, int dimensions, int mines) { //initialise mines
+        Random randomNumber = new Random();
+        for (int placeMines = 0; placeMines < mines; placeMines++) {
+            int randomRow = randomNumber.nextInt(dimensions);
+            int randomColumn = randomNumber.nextInt(dimensions);
+            if (isMine[randomRow][randomColumn] == true) {
+                placeMines--;
+            } else {
+                isMine[randomRow][randomColumn] = true;
+                if (isMine[0][0] == true || isMine[0][dimensions - 1] == true || isMine[dimensions - 1][0] == true || isMine[dimensions - 1][dimensions - 1] == true) { //ensures theres no mines in the corners
+                    placeMines--;
+                    board[randomRow][randomColumn] = '-';
+                    isMine[randomRow][randomColumn] = false;
                 }
             }
         }
-        return true;
+    }    
+
+    public static boolean checkGameWon(char[][] board, int dimensions, boolean[][] isMine) {
+        int win = 0;
+        boolean gameWon = false;
+        for (int x = 0; x < dimensions; x++) {
+            for (int y = 0; y < dimensions; y++) {
+                if (board[x][y] != '-' || (isMine[x][y] == true && board[x][y] == 'X')) {
+                    win++;
+>>>>>>> dbdb88eef604a4f423fc70f202ef92154fd47e4d
+                }
+            }
+        }
+        if (win == (dimensions * dimensions) + 1) {
+            gameWon = true;
+        }
+        return gameWon;
     }
 
-    public static boolean checkGameLost(boolean[][] isBomb, int xCo, int yCo) {
+    public static boolean checkGameLost(boolean[][] isMine, int row, int column) {
         boolean bombFound = false;
-        if (isBomb[xCo][yCo] == true) {
+        if (isMine[row][column] == true) {
             bombFound = true;
-        } 
+        }
         return bombFound;
+<<<<<<< HEAD
     } 
 }
 
 //Do select co-ordinate then randomise bombs
+=======
+    }
+}
+>>>>>>> dbdb88eef604a4f423fc70f202ef92154fd47e4d
