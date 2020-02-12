@@ -83,7 +83,15 @@ public class Minesweeper {
                 System.out.println("CONGRATULATIONS!!! YOU WON!!!");
                 break;
             } else {
-                updateBoard(board, dimensions, row, column, flag, isMine);
+                if (board[row][column] == '-') {
+                    updateBoard(board, dimensions, row, column, flag, isMine);
+                } else if (board[row][column] == 'f' && (flag == 'f' || flag == 'F')) {
+                    updateBoard(board, dimensions, row, column, flag, isMine);
+                } else if (board[row][column] == 'f' && (flag != 'f' || flag != 'F')) {
+                    System.out.println("THERE IS A FLAG THERE");
+                } else {
+                    System.out.println("COORDINATE ALREADY HAS A VALUE");
+                }
                 displayBoard(board, dimensions);
             }
         }
@@ -224,22 +232,6 @@ public class Minesweeper {
         }
     }
 
-<<<<<<< HEAD
-    public static boolean checkGameWon(char[][] board, int row, int column, boolean[][] isBomb) { //slightly complex
-        //if all numbers have been revealed. iterate through every position, check if the value is not .
-        //this is still very weird, look over again - 01/10/2019
-        for (int x = 0; x < row; x++) {
-            for (int y = 0; y < column; y++) {
-                if (board[x][y] != '.' || (isBomb[x][y] == true && board[x][y] == '.') ) { //might have to check the flag count as well
-                    //When won, reveal where flags should be, if they havent been put down, all numbers should be revealed at this point
-                    for (int xWin = 0; xWin < row; xWin++) { //this nested for loop is going through the board again to check if flags havent been revealed
-                        for (int yWin = 0; yWin < column; yWin++) {
-                            if (isBomb[xWin][yWin] == true && board[xWin][yWin] -- '.') {
-                                board[xWin][yWin] = 'f';
-                            }
-                        }
-                    }
-=======
     public static void displayBoard(char[][] board, int dimensions) { //display board
         System.out.println("");
         for (int x = 0; x < dimensions; x++) { //row and column are the dimensions but it does not make sense
@@ -277,7 +269,6 @@ public class Minesweeper {
             for (int y = 0; y < dimensions; y++) {
                 if (board[x][y] != '-' || (isMine[x][y] == true && board[x][y] == 'X')) {
                     win++;
->>>>>>> dbdb88eef604a4f423fc70f202ef92154fd47e4d
                 }
             }
         }
@@ -288,17 +279,12 @@ public class Minesweeper {
     }
 
     public static boolean checkGameLost(boolean[][] isMine, int row, int column) {
-        boolean bombFound = false;
+        boolean mineFound = false;
         if (isMine[row][column] == true) {
-            bombFound = true;
+            mineFound = true;
         }
-        return bombFound;
-<<<<<<< HEAD
+        return mineFound;
     } 
 }
 
 //Do select co-ordinate then randomise bombs
-=======
-    }
-}
->>>>>>> dbdb88eef604a4f423fc70f202ef92154fd47e4d
