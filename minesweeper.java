@@ -270,11 +270,18 @@ public class minesweeper {
 
     public static boolean checkGameWon(char[][] board, int row, int column, boolean[][] isBomb) { //slightly complex
         //if all numbers have been revealed. iterate through every position, check if the value is not .
-        
+        //this is still very weird, look over again - 01/10/2019
         for (int x = 0; x < row; x++) {
             for (int y = 0; y < column; y++) {
                 if (board[x][y] != '.' || (isBomb[x][y] == true && board[x][y] == '.') ) { //might have to check the flag count as well
-                    //When won, reveal where flags should be, if they havent been put down
+                    //When won, reveal where flags should be, if they havent been put down, all numbers should be revealed at this point
+                    for (int xWin = 0; xWin < row; xWin++) { //this nested for loop is going through the board again to check if flags havent been revealed
+                        for (int yWin = 0; yWin < column; yWin++) {
+                            if (isBomb[xWin][yWin] == true && board[xWin][yWin] -- '.') {
+                                board[xWin][yWin] = 'f';
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -289,4 +296,5 @@ public class minesweeper {
         return bombFound;
     } 
 }
+
 //Do select co-ordinate then randomise bombs
