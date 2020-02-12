@@ -76,8 +76,16 @@ public class Minesweeper {
             System.out.print("Flag: ");
             flag = f.next().charAt(0);
 
-            gameLost = checkGameLost(isMine, row, column);
-            gameWon = checkGameWon(board, dimensions, isMine);
+            if (flag == 'f'|| flag == 'F' ) {
+                
+            } else {
+                if (board[row][column] == 'f') {
+                    
+                } else {
+                    gameLost = checkGameLost(isMine, row, column);
+                gameWon = checkGameWon(board, dimensions, isMine);
+                }          
+            }
 
             if (gameLost == true) {
                 displayLostBoard(board, dimensions, isMine);
@@ -90,13 +98,16 @@ public class Minesweeper {
             } else {
                 if (board[row][column] == '-') {
                     updateBoard(board, dimensions, row, column, flag, isMine);
-                } else if (board[row][column] == 'f' && (flag == 'f' || flag == 'F')) {
-                    updateBoard(board, dimensions, row, column, flag, isMine);
-                } else if (board[row][column] == 'f' && (flag != 'f' || flag != 'F')) {
-                    System.out.println("THERE IS A FLAG THERE");
+                } else if (board[row][column] == 'f') {
+                    if (flag == 'f' || flag == 'F') {
+                        updateBoard(board, dimensions, row, column, flag, isMine);
+                    } else {
+                        System.out.println("THERE IS A FLAG THERE");
+                    }
                 } else {
                     System.out.println("COORDINATE ALREADY HAS A VALUE");
                 }
+                
                 displayBoard(board, dimensions);
             }
         }
