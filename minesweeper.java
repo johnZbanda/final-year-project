@@ -19,7 +19,7 @@ public class Minesweeper {
         do {
             Scanner setDifficulty = new Scanner(System.in);
             System.out.println("-------Select a difficulty----------");
-            System.out.println("1 - Begginer, 2 - Intermediate, 3 - Advanced");
+            System.out.println("1 - Beginner, 2 - Intermediate, 3 - Advanced");
             System.out.print("Input here: ");
             //Error Check to see correct input here
             difficulty = setDifficulty.nextInt();
