@@ -1,7 +1,13 @@
+import java.awt.event.*;
+
 import javax.swing.*;
 
-public class DifficultyWindow extends JFrame{
+public class DifficultyWindow extends JFrame implements ActionListener{
 
+    JLabel minesweeper;
+    JButton beginner;
+    JButton intermediate;
+    JButton advanced;
     public DifficultyWindow(int difficulty) {
         super.setTitle("Minesweeper");
         super.setSize(500, 200);
@@ -9,10 +15,14 @@ public class DifficultyWindow extends JFrame{
         super.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         super.setVisible(true);
 
-        JLabel minesweeper = new JLabel("Minesweeper");
-        JButton beginner = new JButton("Beginner");
-        JButton intermediate = new JButton("Intermediate");
-        JButton advanced = new JButton("Advanced");
+        minesweeper = new JLabel("Minesweeper");
+        beginner = new JButton("Beginner");
+        intermediate = new JButton("Intermediate");
+        advanced = new JButton("Advanced");
+
+        beginner.addActionListener(this);
+        intermediate.addActionListener(this);
+        advanced.addActionListener(this);
 
         minesweeper.setBounds(200, 10, 100, 40);
         beginner.setBounds(40, 60, 100, 40);
@@ -27,4 +37,9 @@ public class DifficultyWindow extends JFrame{
         //create the actionbutton listeners
     }
 
+    public void actionPerformed(ActionEvent e) {
+        beginner.setText("Clicked");
+        intermediate.setText("Clicked");
+        advanced.setText("Clicked");
+    }
 }

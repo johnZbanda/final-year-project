@@ -57,7 +57,8 @@ public class Minesweeper {
     }
 
     public static void playGame(char[][]  board, int dimensions, boolean[][] isMine) {
-        int row, column = 0; //this will be the input
+        int row = 0;
+        int column = 0; //this will be the input
         char flag;
         boolean gameWon = false;
         boolean gameLost = false;
@@ -68,24 +69,9 @@ public class Minesweeper {
         Scanner f = new Scanner(System.in);
 
         while (gameLost == false || gameWon == false) {
-            //Input needed
-            System.out.print("y: ");
-            row = x.nextInt();
-            System.out.print("x: ");
-            column = y.nextInt();
-            System.out.print("Flag: ");
-            flag = f.next().charAt(0);
 
-            if (flag == 'f'|| flag == 'F' ) {
-                
-            } else {
-                if (board[row][column] == 'f') {
-                    
-                } else {
-                    gameLost = checkGameLost(isMine, row, column);
-                    gameWon = checkGameWon(board, dimensions, isMine);
-                }          
-            }
+            gameLost = checkGameLost(isMine, row, column);
+            gameWon = checkGameWon(board, dimensions, isMine);
 
             if (gameLost == true) {
                 displayLostBoard(board, dimensions, isMine);
@@ -96,6 +82,13 @@ public class Minesweeper {
                 System.out.println("CONGRATULATIONS!!! YOU WON!!!");
                 break;
             } else {
+                System.out.print("y: "); //input should be after checking game has been won or lost
+                row = x.nextInt();
+                System.out.print("x: ");
+                column = y.nextInt();
+                System.out.print("Flag: ");
+                flag = f.next().charAt(0);
+
                 if (board[row][column] == '-') {
                     updateBoard(board, dimensions, row, column, flag, isMine);
                 } else if (board[row][column] == 'f') {
@@ -278,18 +271,18 @@ public class Minesweeper {
         }
     }    
 
-    public static boolean checkGameWon(char[][] board, int dimensions, boolean[][] isMine) {
-        int win = 0;
-        boolean gameWon = false;
+    public static boolean checkGameWon(char[][] board, int dimensions, boolean[][] isMine) { //change this, it is broken.
+        boolean gameWon = true;
         for (int x = 0; x < dimensions; x++) {
             for (int y = 0; y < dimensions; y++) {
-                if (board[x][y] != '-' || (isMine[x][y] == true && board[x][y] == 'X')) {
-                    win++;
+                if (board[x][y] != '-') { //works but need an extra move.
+                    //do nothing
+                } else if ((board[x][y] == '-' && isMine[x][y] == true) || (board[x][y] == 'f' && isMine[x][y] == true)) {
+
+                } else {
+                    gameWon = false;
                 }
             }
-        }
-        if (win == (dimensions * dimensions) + 1) {
-            gameWon = true;
         }
         return gameWon;
     }
@@ -302,5 +295,3 @@ public class Minesweeper {
         return mineFound;
     } 
 }
-
-//Do select co-ordinate then randomise bombs
