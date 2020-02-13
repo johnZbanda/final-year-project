@@ -1,8 +1,9 @@
-import javax.swing.JFrame;
+import java.awt.event.*; //For ActionListener
+import javax.swing.*; //Using Java Spring for 
 
-public class GameWindow extends JFrame{
+public class GameWindow extends JFrame implements ActionListener{
 
-    public GameWindow() {
+    public GameWindow(char[][] board, int dimensions, int mines, boolean[][] isMine) {
         super.setTitle("Minesweeper");
         super.setSize(900, 600);
         super.setResizable(false);
@@ -10,5 +11,7 @@ public class GameWindow extends JFrame{
         super.setVisible(true);
     }
 
-    
+    public void actionPerformed(ActionEvent e) {
+
+    }
 }
