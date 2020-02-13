@@ -17,10 +17,10 @@ public class Minesweeper {
 
     }
     public static void main (String [] args){
-        //GameWindow gameWindow = new GameWindow();
         int dimensions = 0;
         int difficulty = 0;
         int mines = 0;
+        DifficultyWindow difficultyWindow = new DifficultyWindow(difficulty);
         do {
             Scanner setDifficulty = new Scanner(System.in);
             System.out.println("-------Select a difficulty----------");
@@ -83,7 +83,7 @@ public class Minesweeper {
                     
                 } else {
                     gameLost = checkGameLost(isMine, row, column);
-                gameWon = checkGameWon(board, dimensions, isMine);
+                    gameWon = checkGameWon(board, dimensions, isMine);
                 }          
             }
 

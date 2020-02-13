@@ -10,5 +10,5 @@ public class GameWindow extends JFrame{
         super.setVisible(true);
     }
 
-
+    
 }
