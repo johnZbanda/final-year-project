@@ -13,22 +13,33 @@ public class Minesweeper {
     final static int intMines = 40;
     final static int advMines = 99;
 
+    static int dimensions;
+    static int difficulty;
+    static int mines;
+    static char board[][];
+    static boolean isMine[][];
+
+    GameWindow gameWindow; //this cant be static
     public Minesweeper() { //constructor
 
     }
     public static void main (String [] args){
-        int dimensions = 0;
-        int difficulty = 0;
-        int mines = 0;
-        DifficultyWindow difficultyWindow = new DifficultyWindow(difficulty);
+
+        DifficultyWindow difficultyWindow = new DifficultyWindow();
+         
+    }
+
+    public static void chooseDifficulty(int difficulty) {
         do {
+            /* //needed for console
             Scanner setDifficulty = new Scanner(System.in);
             System.out.println("-------Select a difficulty----------");
             System.out.println("1 - Beginner, 2 - Intermediate, 3 - Advanced");
             System.out.print("Input here: ");
             //Error Check to see correct input here
             difficulty = setDifficulty.nextInt();
-            if (difficulty < 1 || difficulty > 4) {
+            */
+            if (difficulty < 1 || difficulty > 4) { //this can be deleted when UI is made
                 System.out.println("INCORRECT INPUT. PLEASE CHOOSE AGAIN \r\n");
             } else { //set dimension and the mines for the board
                 switch (difficulty) {
@@ -45,15 +56,16 @@ public class Minesweeper {
                         mines = advMines;
                         break;
                 }
-                char board[][] = new char[dimensions][dimensions];
-                boolean isMine[][] = new boolean[mines][mines];
+                board = new char[dimensions][dimensions];
+                isMine = new boolean[mines][mines];
+                //game window would have to be here in my opinion
                 initBoard(board, dimensions);
                 initMines(board, isMine, dimensions, mines);
                 displayBoard(board, dimensions);
                 playGame(board, dimensions, isMine);
                 //initialise board, mines, show display, play the game
             }
-        } while (difficulty < 1 || difficulty > 4); 
+        } while (difficulty < 1 || difficulty > 4);
     }
 
     public static void playGame(char[][]  board, int dimensions, boolean[][] isMine) {

@@ -9,7 +9,8 @@ public class DifficultyWindow extends JFrame implements ActionListener{
     JButton intermediate;
     JButton advanced;
 
-    public DifficultyWindow(int difficulty) {
+    GameWindow gameWindow;
+    public DifficultyWindow() {
         setLayout(null);
 
         super.setTitle("Minesweeper");
@@ -43,15 +44,17 @@ public class DifficultyWindow extends JFrame implements ActionListener{
         String str = e.getActionCommand();
         if (str.equals("Beginner")) {
             beginner.setText("Clicked");
+            game.chooseDifficulty(1); //issue with gameWindow being before this for some reason
+            gameWindow = new GameWindow(game.board, game.dimensions, game.mines, game.isMine);
         } else if (str.equals("Intermediate")) {
             intermediate.setText("Clicked");
-
+            //set difficulty to 2
+            game.chooseDifficulty(2);
         } else if (str.equals("Advanced")) {
             advanced.setText("Clicked");
+            //set difficulty to 3
+            game.chooseDifficulty(3);
         }
-        
-        
-        
-      
+
     }
 }
