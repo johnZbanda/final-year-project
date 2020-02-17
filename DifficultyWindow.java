@@ -53,13 +53,10 @@ public class DifficultyWindow extends JFrame implements ActionListener{
     public void actionPerformed(ActionEvent e) { //separate the clicks
         String str = e.getActionCommand();
         if (str.equals("Beginner")) {
-            beginner.setText("Clicked");
             gameWindow = new GameWindow(1);            
         } else if (str.equals("Intermediate")) {
-            intermediate.setText("Clicked");
             gameWindow = new GameWindow(2);
         } else if (str.equals("Advanced")) {
-            advanced.setText("Clicked");
             gameWindow = new GameWindow(3);
         } else if (str.equals("Login")) {
             //new window to login, once logged in, they should go straight into the game as that user
