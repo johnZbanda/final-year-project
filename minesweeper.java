@@ -59,11 +59,10 @@ public class Minesweeper {
                 board = new char[dimensions][dimensions];
                 isMine = new boolean[mines][mines];
                 //game window would have to be here in my opinion
-                initBoard(board, dimensions);
-                initMines(board, isMine, dimensions, mines);
-                displayBoard(board, dimensions);
-                playGame(board, dimensions, isMine);
-                //initialise board, mines, show display, play the game
+                //initBoard(board, dimensions);
+                //initMines(board, isMine, dimensions, mines);
+                //displayBoard(board, dimensions);  
+                //playGame(board, dimensions, isMine);
             }
         } while (difficulty < 1 || difficulty > 4);
     }

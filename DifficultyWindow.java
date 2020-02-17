@@ -8,6 +8,8 @@ public class DifficultyWindow extends JFrame implements ActionListener{
     JButton beginner;
     JButton intermediate;
     JButton advanced;
+    JButton login;
+    JButton register;
 
     GameWindow gameWindow;
     public DifficultyWindow() {
@@ -23,20 +25,28 @@ public class DifficultyWindow extends JFrame implements ActionListener{
         beginner = new JButton("Beginner");
         intermediate = new JButton("Intermediate");
         advanced = new JButton("Advanced");
+        login = new JButton("Login");
+        register = new JButton("Register");
 
         beginner.addActionListener(this);
         intermediate.addActionListener(this);
         advanced.addActionListener(this);
+        login.addActionListener(this);
+        register.addActionListener(this);
 
-        title.setBounds(200, 10, 100, 40);
-        beginner.setBounds(40, 60, 100, 40);
-        intermediate.setBounds(180, 60, 120, 40);
-        advanced.setBounds(340, 60, 100, 40);
+        title.setBounds(200, 10, 80, 40);
+        beginner.setBounds(40, 85, 100, 40);
+        intermediate.setBounds(180, 85, 120, 40);
+        advanced.setBounds(340, 85, 100, 40);
+        login.setBounds(40, 15, 100, 30);
+        register.setBounds(340, 15, 100, 30);
 
         super.add(title);
         super.add(beginner);
         super.add(intermediate);
         super.add(advanced);
+        super.add(login);
+        super.add(register);
 
     }
 
@@ -44,16 +54,17 @@ public class DifficultyWindow extends JFrame implements ActionListener{
         String str = e.getActionCommand();
         if (str.equals("Beginner")) {
             beginner.setText("Clicked");
-            game.chooseDifficulty(1); //issue with gameWindow being before this for some reason
-            gameWindow = new GameWindow(game.board, game.dimensions, game.mines, game.isMine);
+            gameWindow = new GameWindow(1);            
         } else if (str.equals("Intermediate")) {
             intermediate.setText("Clicked");
-            //set difficulty to 2
-            game.chooseDifficulty(2);
+            gameWindow = new GameWindow(2);
         } else if (str.equals("Advanced")) {
             advanced.setText("Clicked");
-            //set difficulty to 3
-            game.chooseDifficulty(3);
+            gameWindow = new GameWindow(3);
+        } else if (str.equals("Login")) {
+            //new window to login, once logged in, they should go straight into the game as that user
+        } else if (str.equals("Register")) {
+            //new window to register, once registered, they should go straight into the database and their information will be added to the oit
         }
 
     }
