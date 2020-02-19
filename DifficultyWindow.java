@@ -3,6 +3,10 @@ import javax.swing.*;
 
 public class DifficultyWindow extends JFrame implements ActionListener{
 
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
     Minesweeper game;
     JLabel title;
     JButton beginner;

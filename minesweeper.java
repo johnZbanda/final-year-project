@@ -26,7 +26,7 @@ public class Minesweeper {
     public static void main (String [] args){
 
         DifficultyWindow difficultyWindow = new DifficultyWindow();
-         
+
     }
 
     public static void chooseDifficulty(int difficulty) {
@@ -58,9 +58,8 @@ public class Minesweeper {
                 }
                 board = new char[dimensions][dimensions];
                 isMine = new boolean[mines][mines];
-                //game window would have to be here in my opinion
-                //initBoard(board, dimensions);
-                //initMines(board, isMine, dimensions, mines);
+                initBoard(board, dimensions);
+                initMines(board, isMine, dimensions, mines);
                 //displayBoard(board, dimensions);  
                 //playGame(board, dimensions, isMine);
             }
@@ -115,6 +114,7 @@ public class Minesweeper {
                 displayBoard(board, dimensions);
             }
         }
+        x.close(); y.close(); f.close();
         //may need to close inputs
     }
 
