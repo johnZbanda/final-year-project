@@ -10,6 +10,7 @@ public class GameWindow extends JFrame implements ActionListener{
     // UI for the game
     Minesweeper game;
     static int newDimensions;
+    JButton select[];
     public GameWindow(int difficulty) {
         int x = 0;
         int y = 0;
@@ -21,22 +22,22 @@ public class GameWindow extends JFrame implements ActionListener{
         newDimensions = Minesweeper.dimensions;
         JPanel panel = new JPanel();
         panel.setLayout(new GridLayout(newDimensions, newDimensions));
-        JButton button[] = new JButton[newDimensions * newDimensions]; //initialise buttons
+        JButton select[] = new JButton[newDimensions * newDimensions]; //initialise buttons
 
         for (int i = 0; i < (newDimensions * newDimensions); i++) {
-            button[i] = new JButton(); //makes it easier to get the values
+            select[i] = new JButton(Integer.toString(i)); //makes it easier to get the values
             if (x == newDimensions - 1) {
-                button[i].addActionListener(this);
-                button[i].setBounds(35 * (x + 1), 35 * (y + 1), 30, 30);
-                button[i].setVisible(true);
-                super.add(button[i]);
+                select[i].addActionListener(this);
+                select[i].setBounds(35 * (x + 1), 35 * (y + 1), 35, 35);
+                select[i].setVisible(true);
+                super.add(select[i]);
                 x = 0;
                 y++;
             } else {
-                button[i].addActionListener(this);
-                button[i].setBounds(35 * (x + 1), 35 * (y + 1), 30, 30);
-                button[i].setVisible(true);
-                super.add(button[i]);
+                select[i].addActionListener(this);
+                select[i].setBounds(35 * (x + 1), 35 * (y + 1), 35, 35);
+                select[i].setVisible(true);
+                super.add(select[i]);
                 x++;
             }
         }
@@ -59,13 +60,12 @@ public class GameWindow extends JFrame implements ActionListener{
         super.setVisible(true);
     }
     
-
     public void actionPerformed(ActionEvent e) {
-        //initialise board
-        //initialise mines
+        //initialise board, done in Minesweeper class
+        //initialise mines, done in Minesweeper class
         //wont need display board
         //implement playGame
-    
+        System.out.println("in");
     }
 
-}
+}  
