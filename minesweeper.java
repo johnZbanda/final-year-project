@@ -19,7 +19,7 @@ public class Minesweeper {
     static char board[][];
     static boolean isMine[][];
 
-    GameWindow gameWindow; //this cant be static
+    GameWindow gameWindow;
     public Minesweeper() { //constructor
 
     }
@@ -60,7 +60,7 @@ public class Minesweeper {
                 isMine = new boolean[mines][mines];
                 initBoard(board, dimensions);
                 initMines(board, isMine, dimensions, mines);
-                //displayBoard(board, dimensions);  
+                displayBoard(board, dimensions);  //remove comment for testing
                 //playGame(board, dimensions, isMine);
             }
         } while (difficulty < 1 || difficulty > 4);
