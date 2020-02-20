@@ -26,17 +26,25 @@ public class GameWindow extends JFrame implements ActionListener{
 
         for (int i = 0; i < (newDimensions * newDimensions); i++) {
             select[i] = new JButton(Integer.toString(i)); //makes it easier to get the values
-            if (x == newDimensions - 1) {
+            char gameBoard[] = new char[newDimensions * newDimensions]; //used to hold
+            boolean mineBoard[] = new boolean[newDimensions * newDimensions];
+            if (x == newDimensions - 1) {   
                 select[i].addActionListener(this);
                 select[i].setBounds(35 * (x + 1), 35 * (y + 1), 35, 35);
                 select[i].setVisible(true);
-                super.add(select[i]);
+                gameBoard[i] = Minesweeper.board[x][y];
+                mineBoard[i] = Minesweeper.isMine[x][y];
+                System.out.println(x + "," + y + ": " + mineBoard[i]);
                 x = 0;
                 y++;
+                super.add(select[i]);
             } else {
                 select[i].addActionListener(this);
                 select[i].setBounds(35 * (x + 1), 35 * (y + 1), 35, 35);
                 select[i].setVisible(true);
+                gameBoard[i] = Minesweeper.board[x][y];
+                mineBoard[i] = Minesweeper.isMine[x][y];
+                System.out.println(x + "," + y + ": " + mineBoard[i]);
                 super.add(select[i]);
                 x++;
             }
@@ -65,7 +73,11 @@ public class GameWindow extends JFrame implements ActionListener{
         //initialise mines, done in Minesweeper class
         //wont need display board
         //implement playGame
-        System.out.println("in");
+        for (int i = 0; i < Minesweeper.dimensions * Minesweeper.dimensions; i++) {
+            String str = e.getActionCommand();
+            if (str.equals(Integer.toString(i))) {
+                System.out.println(i + " was selected");
+            }     
+        }
     }
-
 }  
