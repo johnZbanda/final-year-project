@@ -3,9 +3,6 @@ import javax.swing.*;
 
 public class DifficultyWindow extends JFrame implements ActionListener{
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
     Minesweeper game;
     JLabel title;
@@ -14,7 +11,6 @@ public class DifficultyWindow extends JFrame implements ActionListener{
     JButton advanced;
     JButton login;
     JButton register;
-
     GameWindow gameWindow;
     public DifficultyWindow() {
         setLayout(null);
