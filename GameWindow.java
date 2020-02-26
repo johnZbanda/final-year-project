@@ -63,7 +63,6 @@ public class GameWindow extends JFrame implements ActionListener{
         super.setVisible(true);
     }
     
-    GameWindow window;
     public void actionPerformed(ActionEvent e) {
         //initialise board, done in Minesweeper class
         //initialise mines, done in Minesweeper class
@@ -75,10 +74,9 @@ public class GameWindow extends JFrame implements ActionListener{
             if (str.equals(Integer.toString(i))) {
                 System.out.println(i + " was selected");
                 //gameBoard[i] is causing the error
-                //System.out.println("x: " + x + " y: " + y);
+                System.out.println("x: " + x + " y: " + y);
                 //need to reference x and y, using getters is probably the best solution
                 //Minesweeper.playGame(Minesweeper.board, Minesweeper.dimensions, Minesweeper.isMine);    
-                window.select[i].setVisible(false); //select cannot be referenced
             }     
         }
     }
