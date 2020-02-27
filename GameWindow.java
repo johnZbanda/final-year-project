@@ -13,6 +13,7 @@ public class GameWindow extends JFrame implements ActionListener{
     int x, y, i;
     JButton select[];
 
+    
     public GameWindow(int difficulty) {
         x = 0;
         y = 0;
@@ -92,7 +93,6 @@ public class GameWindow extends JFrame implements ActionListener{
                 System.out.println("x: " + x + " y: " + y + " was selected");
                 //Minesweeper.playGame(Minesweeper.board, Minesweeper.dimensions, Minesweeper.isMine);  
             }
-            // System.out.println(select[i]);
             select[i].setEnabled(false); //something to do with the frame.
         }
     }
