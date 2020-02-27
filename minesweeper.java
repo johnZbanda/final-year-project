@@ -99,6 +99,7 @@ public class Minesweeper {
                 System.out.print("Flag: ");
                 flag = f.next().charAt(0);
 
+
                 if (board[row][column] == '-') {
                     updateBoard(board, dimensions, row, column, flag, isMine);
                 } else if (board[row][column] == 'f') {
