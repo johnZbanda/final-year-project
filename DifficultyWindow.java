@@ -12,6 +12,7 @@ public class DifficultyWindow extends JFrame implements ActionListener{
     JButton login;
     JButton register;
     GameWindow gameWindow;
+    int difficulty;
     public DifficultyWindow() {
         setLayout(null);
 
@@ -55,11 +56,11 @@ public class DifficultyWindow extends JFrame implements ActionListener{
         if (str.equals("Beginner")) {
             beginner.setText("Selected");
             beginner.setEnabled(false);
-            gameWindow = new GameWindow(1);            
+            gameWindow = new GameWindow();            
         } else if (str.equals("Intermediate")) {
-            gameWindow = new GameWindow(2);
+            gameWindow = new GameWindow();
         } else if (str.equals("Advanced")) {
-            gameWindow = new GameWindow(3);
+            gameWindow = new GameWindow();
         } else if (str.equals("Login")) {
             //new window to login, once logged in, they should go straight into the game as that user
         } else if (str.equals("Register")) {
