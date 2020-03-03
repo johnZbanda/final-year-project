@@ -53,6 +53,8 @@ public class DifficultyWindow extends JFrame implements ActionListener{
     public void actionPerformed(ActionEvent e) { //separate the clicks
         String str = e.getActionCommand();
         if (str.equals("Beginner")) {
+            beginner.setText("Selected");
+            beginner.setEnabled(false);
             gameWindow = new GameWindow(1);            
         } else if (str.equals("Intermediate")) {
             gameWindow = new GameWindow(2);

@@ -12,7 +12,6 @@ public class GameWindow extends JFrame implements ActionListener{
     boolean mineBoard[];
     int x, y, i;
     JButton select[];
-
     
     public GameWindow(int difficulty) {
         x = 0;
@@ -21,11 +20,11 @@ public class GameWindow extends JFrame implements ActionListener{
         super.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         game = new Minesweeper(); 
         Minesweeper.chooseDifficulty(difficulty);
-        JButton select[] = new JButton[Minesweeper.dimensions * Minesweeper.dimensions]; //initialise buttons
+        select = new JButton[Minesweeper.dimensions * Minesweeper.dimensions]; //initialise buttons
         char gameBoard[] = new char[Minesweeper.dimensions * Minesweeper.dimensions]; //used to hold
         boolean mineBoard[] = new boolean[Minesweeper.dimensions * Minesweeper.dimensions];
         for (i = 0; i < (Minesweeper.dimensions * Minesweeper.dimensions); i++) {
-            select[i] = new JButton(); //makes it easier to get the values
+            select[i] = new JButton(Integer.toString(i)); //makes it easier to get the values
 
             if (x == Minesweeper.dimensions - 1) {   
                 select[i].addActionListener(this);
@@ -50,9 +49,9 @@ public class GameWindow extends JFrame implements ActionListener{
                 super.add(select[i]);
                 x++;
             }
-
             // System.out.println("Button Value: "+select[i]);
         }
+        
         switch (difficulty) {
             case 1:
                 super.setSize(650,500);
@@ -76,9 +75,7 @@ public class GameWindow extends JFrame implements ActionListener{
         //wont need display board - might display for testing
         //implement playGame
         
-        JButton[] select = new JButton[Minesweeper.dimensions * Minesweeper.dimensions];
         for (i = 0; i < Minesweeper.dimensions * Minesweeper.dimensions; i++) {
-            select[i] = new JButton(Integer.toString(i));
             if (e.getActionCommand().equals(Integer.toString(i))) {
                 System.out.println(i + " was selected");
                 //gameBoard[i] is causing the error
@@ -87,13 +84,15 @@ public class GameWindow extends JFrame implements ActionListener{
                     if (j == i) {
                         y = (j / Minesweeper.dimensions) % Minesweeper.dimensions;
                         x = value;
-                        break;
                     }
-                } 
+
+                }
+                select[i].setEnabled(false);
                 System.out.println("x: " + x + " y: " + y + " was selected");
-                //Minesweeper.playGame(Minesweeper.board, Minesweeper.dimensions, Minesweeper.isMine);  
+                System.out.println(select[i]);
+                //Minesweeper.playGame(Minesweeper.board, Minesweeper.dimensions, Minesweeper.isMine);         
             }
-            select[i].setEnabled(false); //something to do with the frame.
         }
+
     }
 }  
