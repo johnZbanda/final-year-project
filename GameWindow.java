@@ -83,31 +83,37 @@ public class GameWindow extends JFrame implements ActionListener{
     public void actionPerformed(ActionEvent e) {
         //wont need display board - might display for testing
         //implement playGame
-        //there is an out of bounds error now.
-        System.out.println("check " + Integer.toString(i)); //error is it keeps referencing 81
-        if (e.getActionCommand().equals(Integer.toString(i))) { //issue, it does not go into if statement
-            System.out.println(i + " was selected");
-            int value = i % Minesweeper.dimensions;
-            for (int j = 0; j < Minesweeper.dimensions * Minesweeper.dimensions; j++) {
-                if (j == i) {
-                    y = (j / Minesweeper.dimensions) % Minesweeper.dimensions;
-                    x = value;
+        for (int i = 0; i < (Minesweeper.dimensions * Minesweeper.dimensions); i++) {
+            if (e.getActionCommand().equals(Integer.toString(i))) { //issue, it does not go into if statement
+                System.out.println(i + " was selected");
+                int value = i % Minesweeper.dimensions;
+                for (int j = 0; j < Minesweeper.dimensions * Minesweeper.dimensions; j++) {
+                    if (j == i) {
+                        y = (j / Minesweeper.dimensions) % Minesweeper.dimensions;
+                        x = value;
+                    }
                 }
+                if (Minesweeper.flag == 'f') {
+                    select[i].setEnabled(true);
+                } else {
+                    select[i].setEnabled(false);
+                }
+                Minesweeper.row = y;
+                Minesweeper.column = x;
+                System.out.println("x: " + Minesweeper.row + " y: " + Minesweeper.column + " was selected");
+                break;
+            } else if (e.getActionCommand().equals("Flag - On")) {
+                Minesweeper.flag = 'f';
+                //System.out.println("Flag On " + flag);
+                bFlag.setText("Flag - Off");
+                break;   
+            } else if (e.getActionCommand().equals("Flag - Off")) {
+                Minesweeper.flag = 'x';
+                //System.out.println("Flag Off " + flag);
+                bFlag.setText("Flag - On");
+                break;
             }
-            select[i].setEnabled(false);
-            Minesweeper.row = x;
-            Minesweeper.column = y;
-            System.out.println("x: " + x + " y: " + y + " was selected");
-            Minesweeper.playGame(Minesweeper.board, Minesweeper.dimensions, Minesweeper.isMine);
-        } else if (e.getActionCommand().equals("Flag - On")) {
-            Minesweeper.flag = 'f';
-            //System.out.println("Flag On " + flag);
-            bFlag.setText("Flag - Off");     
-        } else if (e.getActionCommand().equals("Flag - Off")) {
-            Minesweeper.flag = 'x';
-            //System.out.println("Flag Off " + flag);
-            bFlag.setText("Flag - On");
         }
-        
+        Minesweeper.playGame(Minesweeper.board, Minesweeper.dimensions, Minesweeper.isMine);
     }
 }  
