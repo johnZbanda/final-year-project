@@ -18,6 +18,9 @@ public class Minesweeper {
     static int mines;
     static char board[][];
     static boolean isMine[][];
+    static int row;
+    static int column;// this will be the input
+    static char flag;
     GameWindow gameWindow;
 
     public Minesweeper() { // constructor
@@ -62,17 +65,14 @@ public class Minesweeper {
             isMine = new boolean[mines][mines];
             initBoard(board, dimensions);
             initMines(board, isMine, dimensions, mines);
-            displayBoard(board, dimensions); // remove comment for testing
-            playGame(board, dimensions, isMine);
+            displayBoard(board, dimensions);
+            GameWindow gameWindow = new GameWindow();
+            //playGame(board, dimensions, isMine);
         }
         // } while (difficulty < 1 || difficulty > 4);
     }
 
     public static void playGame(char[][] board, int dimensions, boolean[][] isMine) {
-        gameWindow = new GameWindow();
-        int row = gameWindow.x;
-        int column = gameWindow.y; // this will be the input
-        char flag = gameWindow.flag;
         boolean gameWon = false;
         boolean gameLost = false;
         /*
@@ -100,8 +100,8 @@ public class Minesweeper {
              * or lost row = x.nextInt(); System.out.print("x: "); column = y.nextInt();
              * System.out.print("Flag: "); flag = f.next().charAt(0);
              */
-
-            if (board[row][column] == '-') {
+            System.out.println("x: " + row + " y: " + column);
+            if (Minesweeper.board[row][column] == '-') {
                 updateBoard(board, dimensions, row, column, flag, isMine);
             } else if (board[row][column] == 'f') {
                 if (flag == 'f' || flag == 'F') {

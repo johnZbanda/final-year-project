@@ -22,8 +22,6 @@ public class GameWindow extends JFrame implements ActionListener{
         y = 0;
         setLayout(null);
         super.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        game = new Minesweeper(); 
-        Minesweeper.chooseDifficulty();
         select = new JButton[Minesweeper.dimensions * Minesweeper.dimensions]; //initialise buttons
         char gameBoard[] = new char[Minesweeper.dimensions * Minesweeper.dimensions]; //used to hold
         boolean mineBoard[] = new boolean[Minesweeper.dimensions * Minesweeper.dimensions];
@@ -58,7 +56,7 @@ public class GameWindow extends JFrame implements ActionListener{
         }
         bFlag.addActionListener(this);
         
-        switch (difficulty) {
+        switch (Minesweeper.difficulty) {
             case 1:
                 bFlag.setBounds(60, 400, 100, 30);
                 super.setSize(650,500);
@@ -85,9 +83,10 @@ public class GameWindow extends JFrame implements ActionListener{
     public void actionPerformed(ActionEvent e) {
         //wont need display board - might display for testing
         //implement playGame
-        if (e.getActionCommand().equals(Integer.toString(i))) {
+        //there is an out of bounds error now.
+        System.out.println("check " + Integer.toString(i)); //error is it keeps referencing 81
+        if (e.getActionCommand().equals(Integer.toString(i))) { //issue, it does not go into if statement
             System.out.println(i + " was selected");
-            //gameBoard[i] is causing the error
             int value = i % Minesweeper.dimensions;
             for (int j = 0; j < Minesweeper.dimensions * Minesweeper.dimensions; j++) {
                 if (j == i) {
@@ -96,18 +95,19 @@ public class GameWindow extends JFrame implements ActionListener{
                 }
             }
             select[i].setEnabled(false);
+            Minesweeper.row = x;
+            Minesweeper.column = y;
             System.out.println("x: " + x + " y: " + y + " was selected");
-            //Minesweeper.playGame(Minesweeper.board, Minesweeper.dimensions, Minesweeper.isMine);         
+            Minesweeper.playGame(Minesweeper.board, Minesweeper.dimensions, Minesweeper.isMine);
         } else if (e.getActionCommand().equals("Flag - On")) {
-                flag = 'f';
-                //System.out.println("Flag On " + flag);
-                bFlag.setText("Flag - Off");     
+            Minesweeper.flag = 'f';
+            //System.out.println("Flag On " + flag);
+            bFlag.setText("Flag - Off");     
         } else if (e.getActionCommand().equals("Flag - Off")) {
-                flag = 'x';
-                //System.out.println("Flag Off " + flag);
-                bFlag.setText("Flag - On");
+            Minesweeper.flag = 'x';
+            //System.out.println("Flag Off " + flag);
+            bFlag.setText("Flag - On");
         }
-
         
     }
 }  

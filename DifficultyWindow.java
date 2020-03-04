@@ -53,14 +53,18 @@ public class DifficultyWindow extends JFrame implements ActionListener{
 
     public void actionPerformed(ActionEvent e) { //separate the clicks
         String str = e.getActionCommand();
-        if (str.equals("Beginner")) {
-            beginner.setText("Selected");
-            beginner.setEnabled(false);
-            gameWindow = new GameWindow();            
+        if (str.equals("Beginner")) { 
+            Minesweeper.difficulty = 1;
+            Minesweeper.chooseDifficulty();   
+            //gameWindow = new GameWindow();            
         } else if (str.equals("Intermediate")) {
             gameWindow = new GameWindow();
+            Minesweeper.difficulty = 2;
+            Minesweeper.chooseDifficulty();   
         } else if (str.equals("Advanced")) {
             gameWindow = new GameWindow();
+            Minesweeper.difficulty = 3;
+            Minesweeper.chooseDifficulty();   
         } else if (str.equals("Login")) {
             //new window to login, once logged in, they should go straight into the game as that user
         } else if (str.equals("Register")) {
