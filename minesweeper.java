@@ -287,20 +287,22 @@ public class Minesweeper {
         }
     }
 
-    public static boolean checkGameWon(char[][] board, int dimensions, boolean[][] isMine) { // change this, it is
-                                                                                             // broken.
+    public static boolean checkGameWon(char[][] board, int dimensions, boolean[][] isMine) {
         boolean gameWon = true;
+        int win = 0;
+        int winCondition = ((dimensions * dimensions) - mines) - 1;
         for (int x = 0; x < dimensions; x++) {
             for (int y = 0; y < dimensions; y++) {
-                if (board[x][y] != '-') { // works but need an extra move.
-                    // do nothing
-                } else if ((board[x][y] == '-' && isMine[x][y] == true)
-                        || (board[x][y] == 'f' && isMine[x][y] == true)) {
-
-                } else {
-                    gameWon = false;
+                if (board[x][y] != '-') {
+                    win++;
                 }
             }
+        }
+
+        if (win == winCondition) {
+            gameWon = true;
+        } else {
+            gameWon = false;
         }
         return gameWon;
     }

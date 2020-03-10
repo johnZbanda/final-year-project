@@ -99,7 +99,7 @@ public class GameWindow extends JFrame implements ActionListener{
                     select[i].setEnabled(false);
                 } 
                 Minesweeper.playGame(Minesweeper.board, Minesweeper.dimensions, Minesweeper.isMine);
-                updateUI();      
+                updateUI();
                 break;
 
             } else if (e.getActionCommand().equals("Flag - On")) {
