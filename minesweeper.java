@@ -82,25 +82,27 @@ public class Minesweeper {
          * Scanner f = new Scanner(System.in);
          */
         // while (gameLost == false || gameWon == false) {
-
-        gameLost = checkGameLost(isMine, row, column);
-        gameWon = checkGameWon(board, dimensions, isMine);
-
+        if (flag == 'f') {
+            System.out.println("Flag is on");
+        } else {
+            gameLost = checkGameLost(isMine, row, column);
+            gameWon = checkGameWon(board, dimensions, isMine);        
+        }
+        
         if (gameLost == true) {
             displayLostBoard(board, dimensions, isMine);
             System.out.println("You Lose! You found a Mine at " + row + "," + column);
-            // break;
+            //System.exit(0);
         } else if (gameWon == true) {
             displayWinBoard(board, dimensions, isMine);
             System.out.println("CONGRATULATIONS!!! YOU WON!!!");
-            // break;
+            //System.exit(0);
         } else {
             /*
              * System.out.print("y: "); //input should be after checking game has been won
              * or lost row = x.nextInt(); System.out.print("x: "); column = y.nextInt();
              * System.out.print("Flag: "); flag = f.next().charAt(0);
              */
-            System.out.println("x: " + row + " y: " + column);
             if (Minesweeper.board[row][column] == '-') {
                 updateBoard(board, dimensions, row, column, flag, isMine);
             } else if (board[row][column] == 'f') {

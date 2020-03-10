@@ -23,8 +23,8 @@ public class GameWindow extends JFrame implements ActionListener{
         setLayout(null);
         super.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         select = new JButton[Minesweeper.dimensions * Minesweeper.dimensions]; //initialise buttons
-        char gameBoard[] = new char[Minesweeper.dimensions * Minesweeper.dimensions]; //used to hold
-        boolean mineBoard[] = new boolean[Minesweeper.dimensions * Minesweeper.dimensions];
+        gameBoard = new char[Minesweeper.dimensions * Minesweeper.dimensions]; //used to hold
+        mineBoard = new boolean[Minesweeper.dimensions * Minesweeper.dimensions];
         bFlag = new JButton("Flag - On");
         for (i = 0; i < (Minesweeper.dimensions * Minesweeper.dimensions); i++) {
             select[i] = new JButton(Integer.toString(i)); //makes it easier to get the values
@@ -86,34 +86,58 @@ public class GameWindow extends JFrame implements ActionListener{
         for (int i = 0; i < (Minesweeper.dimensions * Minesweeper.dimensions); i++) {
             if (e.getActionCommand().equals(Integer.toString(i))) { //issue, it does not go into if statement
                 System.out.println(i + " was selected");
-                int value = i % Minesweeper.dimensions;
-                for (int j = 0; j < Minesweeper.dimensions * Minesweeper.dimensions; j++) {
-                    if (j == i) {
-                        y = (j / Minesweeper.dimensions) % Minesweeper.dimensions;
-                        x = value;
-                    }
-                }
-                if (Minesweeper.flag == 'f') {
+
+                calcCoordinates(i);
+
+                Minesweeper.row = y;
+                Minesweeper.column = x;
+
+                System.out.println("x: " + Minesweeper.column + " y: " + Minesweeper.row + " was selected");
+                if (Minesweeper.flag == 'f' && (Minesweeper.board[x][y] == '-' || Minesweeper.board[x][y] == 'f')) {
                     select[i].setEnabled(true);
                 } else {
                     select[i].setEnabled(false);
-                }
-                Minesweeper.row = y;
-                Minesweeper.column = x;
-                System.out.println("x: " + Minesweeper.row + " y: " + Minesweeper.column + " was selected");
+                } 
+                Minesweeper.playGame(Minesweeper.board, Minesweeper.dimensions, Minesweeper.isMine);
+                updateUI();      
                 break;
+
             } else if (e.getActionCommand().equals("Flag - On")) {
                 Minesweeper.flag = 'f';
+                System.out.println("Flag Status: " + Minesweeper.flag);
                 //System.out.println("Flag On " + flag);
                 bFlag.setText("Flag - Off");
                 break;   
             } else if (e.getActionCommand().equals("Flag - Off")) {
                 Minesweeper.flag = 'x';
+                System.out.println("Flag Status: " + Minesweeper.flag);
                 //System.out.println("Flag Off " + flag);
                 bFlag.setText("Flag - On");
                 break;
             }
         }
-        Minesweeper.playGame(Minesweeper.board, Minesweeper.dimensions, Minesweeper.isMine);
+    }
+
+    public void updateUI() {
+        for (int i = 0; i < Minesweeper.dimensions * Minesweeper.dimensions; i++) {
+            calcCoordinates(i);
+            Minesweeper.row = y;
+            Minesweeper.column = x;
+            gameBoard[i] = Minesweeper.board[Minesweeper.row][Minesweeper.column];
+            if (gameBoard[i] != '-') {
+                select[i].setText(String.valueOf(gameBoard[i]));
+                select[i].setEnabled(false);  
+            }
+        }
+    }
+
+    public void calcCoordinates(int i) {
+        int value = i % Minesweeper.dimensions;
+        for (int j = 0; j < Minesweeper.dimensions * Minesweeper.dimensions; j++) {
+            if (j == i) {
+                y = (j / Minesweeper.dimensions) % Minesweeper.dimensions;
+                x = value;
+            }
+        }
     }
 }  
