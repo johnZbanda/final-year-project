@@ -1,4 +1,4 @@
-import java.awt.Font;
+import java.awt.*;
 import java.awt.event.*; //For ActionListener
 import javax.swing.*; //Using Java Swing for 
 //import java.awt.*;
@@ -21,7 +21,7 @@ public class GameWindow extends JFrame implements ActionListener{
         x = 0;
         y = 0;
         setLayout(null);
-        super.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        super.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         select = new JButton[Minesweeper.dimensions * Minesweeper.dimensions]; //initialise buttons
         gameBoard = new char[Minesweeper.dimensions * Minesweeper.dimensions]; //used to hold
         mineBoard = new boolean[Minesweeper.dimensions * Minesweeper.dimensions];
@@ -34,7 +34,8 @@ public class GameWindow extends JFrame implements ActionListener{
                 select[i].setBounds(60 * (x + 1), 35 * (y + 1), 60, 35);
                 select[i].setVisible(true);
                 select[i].setText(Integer.toString(i));
-                select[i].setFont(new Font("Arial", Font.PLAIN, 10));
+                select[i].setFont(new Font("Arial", Font.PLAIN, 12));
+                select[i].setForeground(Color.BLACK);
                 gameBoard[i] = Minesweeper.board[x][y];
                 mineBoard[i] = Minesweeper.isMine[x][y];
                 //System.out.println("i: " + i + " x: " + x + " y: " + y + " mine: " + mineBoard[i]);
@@ -45,7 +46,8 @@ public class GameWindow extends JFrame implements ActionListener{
                 select[i].setBounds(60 * (x + 1), 35 * (y + 1), 60, 35);
                 select[i].setVisible(true);
                 select[i].setText(Integer.toString(i));
-                select[i].setFont(new Font("Arial", Font.PLAIN, 10));
+                select[i].setFont(new Font("Arial", Font.PLAIN, 12));
+                select[i].setForeground(Color.BLACK);
                 gameBoard[i] = Minesweeper.board[x][y];
                 mineBoard[i] = Minesweeper.isMine[x][y];
                 //System.out.println("i: " + i + " x: " + x + " y: " + y + " mine: " + mineBoard[i]);
@@ -93,13 +95,14 @@ public class GameWindow extends JFrame implements ActionListener{
                 Minesweeper.column = x;
 
                 System.out.println("x: " + Minesweeper.column + " y: " + Minesweeper.row + " was selected");
-                if (Minesweeper.flag == 'f' && (Minesweeper.board[x][y] == '-' || Minesweeper.board[x][y] == 'f')) {
-                    select[i].setEnabled(true);
-                } else {
-                    select[i].setEnabled(false);
-                } 
                 Minesweeper.playGame(Minesweeper.board, Minesweeper.dimensions, Minesweeper.isMine);
-                updateUI();
+                System.out.println("check");
+                if (Minesweeper.flag == 'f') { //doesnt go through here after it is done the first time
+                    System.out.println("Update Flag UI");
+                    updateFlagUI(i);
+                } else {
+                    updateUI();
+                }
                 break;
 
             } else if (e.getActionCommand().equals("Flag - On")) {
@@ -116,6 +119,11 @@ public class GameWindow extends JFrame implements ActionListener{
                 break;
             }
         }
+        /*
+        if (Minesweeper.checkGameWon(Minesweeper.board, Minesweeper.dimensions, Minesweeper.isMine) || (Minesweeper.checkGameLost(Minesweeper.isMine, Minesweeper.row, Minesweeper.column)) {
+            dispose();
+        }
+        */
     }
 
     public void updateUI() {
@@ -124,10 +132,30 @@ public class GameWindow extends JFrame implements ActionListener{
             Minesweeper.row = y;
             Minesweeper.column = x;
             gameBoard[i] = Minesweeper.board[Minesweeper.row][Minesweeper.column];
-            if (gameBoard[i] != '-') {
+            if (gameBoard[i] == '-') {
+                select[i].setText(Integer.toString(i));
+                select[i].setEnabled(true);
+            } else if (gameBoard[i] == 'f'){
+                select[i].setText(String.valueOf("f"));
+                select[i].setEnabled(true); 
+            } else {
                 select[i].setText(String.valueOf(gameBoard[i]));
-                select[i].setEnabled(false);  
+                select[i].setEnabled(false); 
             }
+            //select[i].setText(String.valueOf(gameBoard[i]));
+        }
+    }
+
+    public void updateFlagUI(int i) {
+        calcCoordinates(i);
+        Minesweeper.row = y;
+        Minesweeper.column = x;
+        gameBoard[i] = Minesweeper.board[Minesweeper.row][Minesweeper.column];
+
+        if (gameBoard[i] == '-') {
+            select[i].setText("-");
+        } else if (gameBoard[i] == 'f') {
+            select[i].setText("f");
         }
     }
 

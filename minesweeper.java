@@ -34,16 +34,6 @@ public class Minesweeper {
     }
 
     public static void chooseDifficulty() {
-
-        // do {
-
-        /*
-         * //needed for console Scanner setDifficulty = new Scanner(System.in);
-         * System.out.println("-------Select a difficulty----------");
-         * System.out.println("1 - Beginner, 2 - Intermediate, 3 - Advanced");
-         * System.out.print("Input here: "); //Error Check to see correct input here
-         * difficulty = setDifficulty.nextInt();
-         */
         if (difficulty < 1 || difficulty > 4) { // this can be deleted when UI is made
             System.out.println("INCORRECT INPUT. PLEASE CHOOSE AGAIN \r\n");
         } else { // set dimension and the mines for the board
@@ -69,19 +59,11 @@ public class Minesweeper {
             GameWindow gameWindow = new GameWindow();
             //playGame(board, dimensions, isMine);
         }
-        // } while (difficulty < 1 || difficulty > 4);
     }
 
     public static void playGame(char[][] board, int dimensions, boolean[][] isMine) {
         boolean gameWon = false;
         boolean gameLost = false;
-        /*
-         * System.out.
-         * println("Input Coordinates.\r\n F to input a Flag, Anything to input no flag\r\n x y (F)\r\n"
-         * ); Scanner x = new Scanner(System.in); Scanner y = new Scanner(System.in);
-         * Scanner f = new Scanner(System.in);
-         */
-        // while (gameLost == false || gameWon == false) {
         if (flag == 'f') {
             System.out.println("Flag is on");
         } else {
@@ -92,17 +74,13 @@ public class Minesweeper {
         if (gameLost == true) {
             displayLostBoard(board, dimensions, isMine);
             System.out.println("You Lose! You found a Mine at " + row + "," + column);
-            //System.exit(0);
+
         } else if (gameWon == true) {
             displayWinBoard(board, dimensions, isMine);
             System.out.println("CONGRATULATIONS!!! YOU WON!!!");
-            //System.exit(0);
+
         } else {
-            /*
-             * System.out.print("y: "); //input should be after checking game has been won
-             * or lost row = x.nextInt(); System.out.print("x: "); column = y.nextInt();
-             * System.out.print("Flag: "); flag = f.next().charAt(0);
-             */
+
             if (Minesweeper.board[row][column] == '-') {
                 updateBoard(board, dimensions, row, column, flag, isMine);
             } else if (board[row][column] == 'f') {
@@ -117,9 +95,7 @@ public class Minesweeper {
 
             displayBoard(board, dimensions);
         }
-        // }
-        // x.close(); y.close(); f.close();
-        // may need to close inputs
+
     }
 
     public static void displayWinBoard(char[][] board, int dimensions, boolean[][] isMine) {
