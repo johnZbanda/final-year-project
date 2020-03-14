@@ -86,7 +86,10 @@ public class GameWindow extends JFrame implements ActionListener{
         //wont need display board - might display for testing
         //implement playGame
         for (int i = 0; i < (Minesweeper.dimensions * Minesweeper.dimensions); i++) {
+            System.out.println(i + ": Pressed");
+            //seprate if statments
             if (e.getActionCommand().equals(Integer.toString(i))) { //issue, it does not go into if statement
+                //issue is here. Does not check if flag is equal to f
                 System.out.println(i + " was selected");
 
                 calcCoordinates(i);
@@ -96,13 +99,17 @@ public class GameWindow extends JFrame implements ActionListener{
 
                 System.out.println("x: " + Minesweeper.column + " y: " + Minesweeper.row + " was selected");
                 Minesweeper.playGame(Minesweeper.board, Minesweeper.dimensions, Minesweeper.isMine);
-                System.out.println("check");
+
+                System.out.println("Checking Flag: " + Minesweeper.flag);
                 if (Minesweeper.flag == 'f') { //doesnt go through here after it is done the first time
                     System.out.println("Update Flag UI");
                     updateFlagUI(i);
-                } else {
-                    updateUI();
+                } else {    
+                    System.out.println("yo yo ");
+                    //changeNumberColour(i);
+                    updateUI(); 
                 }
+                System.out.println("checking again");
                 break;
 
             } else if (e.getActionCommand().equals("Flag - On")) {
@@ -117,7 +124,13 @@ public class GameWindow extends JFrame implements ActionListener{
                 //System.out.println("Flag Off " + flag);
                 bFlag.setText("Flag - On");
                 break;
+            } else if (e.getActionCommand().equals("f")) {
+                Minesweeper.playGame(Minesweeper.board, Minesweeper.dimensions, Minesweeper.isMine);
+                updateFlagUI(i);
+                System.out.println("Gone here");
+                break;
             }
+            //slight error with the selection of the last coordinate
         }
         /*
         if (Minesweeper.checkGameWon(Minesweeper.board, Minesweeper.dimensions, Minesweeper.isMine) || (Minesweeper.checkGameLost(Minesweeper.isMine, Minesweeper.row, Minesweeper.column)) {
@@ -152,8 +165,9 @@ public class GameWindow extends JFrame implements ActionListener{
         Minesweeper.column = x;
         gameBoard[i] = Minesweeper.board[Minesweeper.row][Minesweeper.column];
 
+        //playGame will be before this statement
         if (gameBoard[i] == '-') {
-            select[i].setText("-");
+            select[i].setText(Integer.toString(i));
         } else if (gameBoard[i] == 'f') {
             select[i].setText("f");
         }
@@ -166,6 +180,18 @@ public class GameWindow extends JFrame implements ActionListener{
                 y = (j / Minesweeper.dimensions) % Minesweeper.dimensions;
                 x = value;
             }
+        }
+    }
+
+    public void changeNumberColour(int i) {
+        gameBoard[i] = Minesweeper.board[Minesweeper.row][Minesweeper.column];
+        switch (gameBoard[i]) {
+            case '1':
+                select[i].setForeground(Color.RED);
+                break;
+            case '2':
+                select[i].setForeground(Color.BLUE);
+                break;
         }
     }
 }  
