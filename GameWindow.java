@@ -26,6 +26,7 @@ public class GameWindow extends JFrame implements ActionListener{
         gameBoard = new char[Minesweeper.dimensions * Minesweeper.dimensions]; //used to hold
         mineBoard = new boolean[Minesweeper.dimensions * Minesweeper.dimensions];
         bFlag = new JButton("Flag - On");
+        Minesweeper.flag = 'x';
         for (i = 0; i < (Minesweeper.dimensions * Minesweeper.dimensions); i++) {
             select[i] = new JButton(Integer.toString(i)); //makes it easier to get the values
 
@@ -105,11 +106,9 @@ public class GameWindow extends JFrame implements ActionListener{
                     System.out.println("Update Flag UI");
                     updateFlagUI(i);
                 } else {    
-                    System.out.println("yo yo ");
                     //changeNumberColour(i);
                     updateUI(); 
                 }
-                System.out.println("checking again");
                 break;
 
             } else if (e.getActionCommand().equals("Flag - On")) {
@@ -124,10 +123,9 @@ public class GameWindow extends JFrame implements ActionListener{
                 //System.out.println("Flag Off " + flag);
                 bFlag.setText("Flag - On");
                 break;
-            } else if (e.getActionCommand().equals("f")) {
+            } else if (e.getActionCommand().equals(Integer.toString(i) + " f")) {
                 Minesweeper.playGame(Minesweeper.board, Minesweeper.dimensions, Minesweeper.isMine);
                 updateFlagUI(i);
-                System.out.println("Gone here");
                 break;
             }
             //slight error with the selection of the last coordinate
@@ -169,7 +167,7 @@ public class GameWindow extends JFrame implements ActionListener{
         if (gameBoard[i] == '-') {
             select[i].setText(Integer.toString(i));
         } else if (gameBoard[i] == 'f') {
-            select[i].setText("f");
+            select[i].setText(Integer.toString(i) + " f");
         }
     }
 
