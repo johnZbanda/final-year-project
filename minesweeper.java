@@ -64,9 +64,11 @@ public class Minesweeper {
     public static void playGame(char[][] board, int dimensions, boolean[][] isMine) {
         boolean gameWon = false;
         boolean gameLost = false;
+        boolean flagTotal = false;
 
         if (flag == 'f') {
             System.out.println("Flag is on");
+            flagTotal = checkTotalFlags();
         } else {
             gameLost = checkGameLost(isMine, row, column);
             gameWon = checkGameWon(board, dimensions, isMine);        
@@ -81,7 +83,6 @@ public class Minesweeper {
             System.out.println("CONGRATULATIONS!!! YOU WON!!!");
 
         } else {
-            //int flagsLeft = flagLimit();
             if (Minesweeper.board[row][column] == '-') {
                 updateBoard(board, dimensions, row, column, flag, isMine);
             } else if (board[row][column] == 'f') {
@@ -292,15 +293,20 @@ public class Minesweeper {
         return mineFound;
     }
 
-    public static int flagLimit() {
-        int flagsLeft = mines;
+    public static boolean checkTotalFlags() {
+        int flagsLeft = 0;
         for (int x = 0; x < dimensions; x++) {
             for (int y = 0; y < dimensions; y++) {
                 if (board[x][y] == 'f') {
-                    flagsLeft--;
+                    flagsLeft++;
                 }
             }
         }
-        return flagsLeft;
+
+        if (flagsLeft == mines) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
