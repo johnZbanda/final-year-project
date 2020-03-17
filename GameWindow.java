@@ -89,6 +89,7 @@ public class GameWindow extends JFrame implements ActionListener{
         for (int i = 0; i < (Minesweeper.dimensions * Minesweeper.dimensions); i++) {
             System.out.println(i + ": Pressed");
             //seprate if statments
+            
             if (e.getActionCommand().equals(Integer.toString(i))) { //issue, it does not go into if statement
                 //issue is here. Does not check if flag is equal to f
                 System.out.println(i + " was selected");
@@ -124,11 +125,16 @@ public class GameWindow extends JFrame implements ActionListener{
                 bFlag.setText("Flag - On");
                 break;
             } else if (e.getActionCommand().equals(Integer.toString(i) + " f")) {
+                System.out.println("Check - Integer to String + F");
+                calcCoordinates(i);
+
+                Minesweeper.row = y;
+                Minesweeper.column = x;
                 Minesweeper.playGame(Minesweeper.board, Minesweeper.dimensions, Minesweeper.isMine);
+                //updateUI();
                 updateFlagUI(i);
                 break;
             }
-            //slight error with the selection of the last coordinate
         }
         /*
         if (Minesweeper.checkGameWon(Minesweeper.board, Minesweeper.dimensions, Minesweeper.isMine) || (Minesweeper.checkGameLost(Minesweeper.isMine, Minesweeper.row, Minesweeper.column)) {
@@ -147,7 +153,7 @@ public class GameWindow extends JFrame implements ActionListener{
                 select[i].setText(Integer.toString(i));
                 select[i].setEnabled(true);
             } else if (gameBoard[i] == 'f'){
-                select[i].setText(String.valueOf("f"));
+                select[i].setText(String.valueOf(Integer.toString(i) + " f"));
                 select[i].setEnabled(true); 
             } else {
                 select[i].setText(String.valueOf(gameBoard[i]));

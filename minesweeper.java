@@ -64,16 +64,15 @@ public class Minesweeper {
     public static void playGame(char[][] board, int dimensions, boolean[][] isMine) {
         boolean gameWon = false;
         boolean gameLost = false;
-        boolean flagTotal = false;
-
+        int flagTotal = checkTotalFlags();
+        
         if (flag == 'f') {
             System.out.println("Flag is on");
-            flagTotal = checkTotalFlags();
         } else {
             gameLost = checkGameLost(isMine, row, column);
-            gameWon = checkGameWon(board, dimensions, isMine);        
+            gameWon = checkGameWon(board, dimensions, isMine);
         }
-        
+
         if (gameLost == true) {
             displayLostBoard(board, dimensions, isMine);
             System.out.println("You Lose! You found a Mine at " + row + "," + column);
@@ -83,18 +82,23 @@ public class Minesweeper {
             System.out.println("CONGRATULATIONS!!! YOU WON!!!");
 
         } else {
-            if (Minesweeper.board[row][column] == '-') {
-                updateBoard(board, dimensions, row, column, flag, isMine);
+            if (Minesweeper.board[row][column] == '-') {              
+                if (flagTotal > mines - 1 && flag == 'f') {
+                    System.out.println("You have no more flags");
+                } else {
+                    updateBoard(board, dimensions, row, column, flag, isMine);    
+                }
+                flagTotal = checkTotalFlags();
+                System.out.println("Update Board on - : Flags On Board = " + flagTotal);
             } else if (board[row][column] == 'f') {
-                if (flag == 'f') {
-                    updateBoard(board, dimensions, row, column, flag, isMine);
+                if (flag == 'f' && flagTotal > 0) {
+                    updateBoard(board, dimensions, row, column, flag, isMine); 
                 } else {
                     System.out.println("THERE IS A FLAG THERE");
                 }
             } else {
                 System.out.println("COORDINATE ALREADY HAS A VALUE");
             }
-
             displayBoard(board, dimensions);
         }
 
@@ -276,8 +280,10 @@ public class Minesweeper {
                 }
             }
         }
+        
+        System.out.println("Win Condition: " + winCondition + " Win Count = " + win + " Amount Left: " + (winCondition - win));
 
-        if (win == winCondition) {
+        if (win >= winCondition - 1) {
             gameWon = true;
         } else {
             gameWon = false;
@@ -293,7 +299,7 @@ public class Minesweeper {
         return mineFound;
     }
 
-    public static boolean checkTotalFlags() {
+    public static int checkTotalFlags() {
         int flagsLeft = 0;
         for (int x = 0; x < dimensions; x++) {
             for (int y = 0; y < dimensions; y++) {
@@ -302,11 +308,6 @@ public class Minesweeper {
                 }
             }
         }
-
-        if (flagsLeft == mines) {
-            return true;
-        } else {
-            return false;
-        }
+        return flagsLeft;
     }
 }
