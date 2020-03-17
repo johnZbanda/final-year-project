@@ -110,6 +110,7 @@ public class GameWindow extends JFrame implements ActionListener{
                     //changeNumberColour(i);
                     updateUI(); 
                 }
+            
                 break;
 
             } else if (e.getActionCommand().equals("Flag - On")) {
@@ -136,11 +137,6 @@ public class GameWindow extends JFrame implements ActionListener{
                 break;
             }
         }
-        /*
-        if (Minesweeper.checkGameWon(Minesweeper.board, Minesweeper.dimensions, Minesweeper.isMine) || (Minesweeper.checkGameLost(Minesweeper.isMine, Minesweeper.row, Minesweeper.column)) {
-            dispose();
-        }
-        */
     }
 
     public void updateUI() {
@@ -149,16 +145,29 @@ public class GameWindow extends JFrame implements ActionListener{
             Minesweeper.row = y;
             Minesweeper.column = x;
             gameBoard[i] = Minesweeper.board[Minesweeper.row][Minesweeper.column];
-            if (gameBoard[i] == '-') {
-                select[i].setText(Integer.toString(i));
-                select[i].setEnabled(true);
-            } else if (gameBoard[i] == 'f'){
-                select[i].setText(String.valueOf(Integer.toString(i) + " f"));
-                select[i].setEnabled(true); 
+            
+            if (Minesweeper.checkGameWon(Minesweeper.board, Minesweeper.dimensions, Minesweeper.isMine)) {
+                Minesweeper.playGame(Minesweeper.board, Minesweeper.dimensions, Minesweeper.isMine); //inefficient but works
+                if (gameBoard[i] == 'f') {
+                    select[i].setText("f");
+                } else {
+                    select[i].setText(String.valueOf(gameBoard[i]));
+                }
+                select[i].setEnabled(false);
             } else {
-                select[i].setText(String.valueOf(gameBoard[i]));
-                select[i].setEnabled(false); 
+                if (gameBoard[i] == '-') {
+                    select[i].setText(Integer.toString(i));
+                    select[i].setEnabled(true);
+                } else if (gameBoard[i] == 'f'){
+                    select[i].setText(String.valueOf(Integer.toString(i) + " f"));
+                    select[i].setEnabled(true); 
+                } else {
+                    select[i].setText(String.valueOf(gameBoard[i]));
+                    select[i].setEnabled(false); 
+                }    
             }
+            
+            
             //select[i].setText(String.valueOf(gameBoard[i]));
         }
     }

@@ -74,10 +74,12 @@ public class Minesweeper {
         }
 
         if (gameLost == true) {
+            //updateBoard(board, dimensions, row, column, flag, isMine);
             displayLostBoard(board, dimensions, isMine);
             System.out.println("You Lose! You found a Mine at " + row + "," + column);
 
         } else if (gameWon == true) {
+            updateBoard(board, dimensions, row, column, flag, isMine);
             displayWinBoard(board, dimensions, isMine);
             System.out.println("CONGRATULATIONS!!! YOU WON!!!");
 
@@ -280,8 +282,6 @@ public class Minesweeper {
                 }
             }
         }
-        
-        System.out.println("Win Condition: " + winCondition + " Win Count = " + win + " Amount Left: " + (winCondition - win));
 
         if (win >= winCondition - 1) {
             gameWon = true;
