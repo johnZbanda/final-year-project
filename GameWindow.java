@@ -16,6 +16,7 @@ public class GameWindow extends JFrame implements ActionListener{
     char flag = 'z';
     JButton select[];
     JButton bFlag;
+    JButton quit;
     
     public GameWindow() {
         x = 0;
@@ -26,6 +27,7 @@ public class GameWindow extends JFrame implements ActionListener{
         gameBoard = new char[Minesweeper.dimensions * Minesweeper.dimensions]; //used to hold
         mineBoard = new boolean[Minesweeper.dimensions * Minesweeper.dimensions];
         bFlag = new JButton("Flag - On");
+        quit = new JButton("Quit");
         Minesweeper.flag = 'x';
         for (i = 0; i < (Minesweeper.dimensions * Minesweeper.dimensions); i++) {
             select[i] = new JButton(Integer.toString(i)); //makes it easier to get the values
@@ -58,25 +60,30 @@ public class GameWindow extends JFrame implements ActionListener{
             // System.out.println("Button Value: "+select[i]);
         }
         bFlag.addActionListener(this);
-        
+        quit.addActionListener(this);
         switch (Minesweeper.difficulty) {
             case 1:
                 bFlag.setBounds(60, 400, 100, 30);
+                quit.setBounds(300, 400, 100, 30);
                 super.setSize(650,500);
                 super.setTitle("Minesweeper - Beginner");
                 break;
             case 2:
                 bFlag.setBounds(60, 600, 100, 30);
+                quit.setBounds(300, 600, 100, 30);
                 super.setSize(1250,700);
                 super.setTitle("Minesweeper - Intermediate");
                 break;
             case 3:
                 bFlag.setBounds(60, 900, 100, 30);
+                quit.setBounds(300, 900, 100, 30);
                 super.setSize(1720,980);
                 super.setTitle("Minesweeper - Advanced");
                 break;
         }
         bFlag.setEnabled(true);
+        quit.setEnabled(true);
+        super.add(quit);
         super.add(bFlag);
         super.setResizable(true);
         super.setVisible(true);
