@@ -34,9 +34,7 @@ public class Minesweeper {
     }
 
     public static void chooseDifficulty() {
-        if (difficulty < 1 || difficulty > 4) { // this can be deleted when UI is made
-            System.out.println("INCORRECT INPUT. PLEASE CHOOSE AGAIN \r\n");
-        } else { // set dimension and the mines for the board
+     // set dimension and the mines for the board
             switch (difficulty) {
             case 1:
                 dimensions = begDimension;
@@ -58,14 +56,12 @@ public class Minesweeper {
             displayBoard(board, dimensions);
             GameWindow gameWindow = new GameWindow();
             //playGame(board, dimensions, isMine);
-        }
     }
 
     public static void playGame(char[][] board, int dimensions, boolean[][] isMine) {
         boolean gameWon = false;
         boolean gameLost = false;
         int flagTotal = checkTotalFlags();
-        
         if (flag == 'f') {
             System.out.println("Flag is on");
         } else {
@@ -283,7 +279,7 @@ public class Minesweeper {
             }
         }
 
-        if (win >= winCondition - 1) {
+        if (win >= winCondition) {
             gameWon = true;
         } else {
             gameWon = false;

@@ -58,11 +58,9 @@ public class DifficultyWindow extends JFrame implements ActionListener{
             Minesweeper.chooseDifficulty();   
             //gameWindow = new GameWindow();            
         } else if (str.equals("Intermediate")) {
-            gameWindow = new GameWindow();
             Minesweeper.difficulty = 2;
             Minesweeper.chooseDifficulty();   
         } else if (str.equals("Advanced")) {
-            gameWindow = new GameWindow();
             Minesweeper.difficulty = 3;
             Minesweeper.chooseDifficulty();   
         } else if (str.equals("Login")) {
