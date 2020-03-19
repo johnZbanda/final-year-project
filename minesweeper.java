@@ -62,6 +62,7 @@ public class Minesweeper {
         boolean gameWon = false;
         boolean gameLost = false;
         int flagTotal = checkTotalFlags();
+        
         if (flag == 'f') {
             System.out.println("Flag is on");
         } else {

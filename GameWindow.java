@@ -26,6 +26,7 @@ public class GameWindow extends JFrame implements ActionListener{
         select = new JButton[Minesweeper.dimensions * Minesweeper.dimensions]; //initialise buttons
         gameBoard = new char[Minesweeper.dimensions * Minesweeper.dimensions]; //used to hold
         mineBoard = new boolean[Minesweeper.dimensions * Minesweeper.dimensions];
+        //super.getContentPane().setBackground(Color.YELLOW);
         bFlag = new JButton("Flag - On");
         quit = new JButton("Quit");
         Minesweeper.flag = 'x';
@@ -114,9 +115,13 @@ public class GameWindow extends JFrame implements ActionListener{
                     System.out.println("Update Flag UI");
                     updateFlagUI(i);
                 } else {    
-                    
-                    updateUI();
-                    // changeNumberColour(i);
+                    if (Minesweeper.checkGameLost(Minesweeper.isMine, Minesweeper.row, Minesweeper.column)) {
+                        System.out.println("Check");
+                        loseUI();
+                    } else {
+                        updateUI();    
+                    }                 
+                    changeNumberColour(i);
                 }
             
                 break;
@@ -177,6 +182,25 @@ public class GameWindow extends JFrame implements ActionListener{
         }
     }
 
+    public void loseUI() {
+        for (int i = 0; i < Minesweeper.dimensions * Minesweeper.dimensions; i++) {
+            calcCoordinates(i);
+            Minesweeper.row = y;
+            Minesweeper.column = x;
+            gameBoard[i] = Minesweeper.board[Minesweeper.row][Minesweeper.column];
+            if (gameBoard[i] == '-') {
+                select[i].setText("-");
+            } else if (gameBoard[i] == 'w') {
+                select[i].setText("W");
+            } else if (gameBoard[i] == 'f') {
+                select[i].setText("f");
+            } else if (gameBoard[i] == 'X') {
+                select[i].setText("X");
+            }
+            select[i].setEnabled(false);
+        }
+    }
+
     public void updateFlagUI(int i) {
         calcCoordinates(i);
         Minesweeper.row = y;
@@ -205,7 +229,7 @@ public class GameWindow extends JFrame implements ActionListener{
         gameBoard[i] = Minesweeper.board[Minesweeper.row][Minesweeper.column];
         switch (gameBoard[i]) {
             case '1':
-                select[i].setForeground(Color.RED);
+                select[i].getRootPane().setForeground(Color.RED);
                 break;
             case '2':
                 select[i].setForeground(Color.BLUE);
