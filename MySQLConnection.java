@@ -6,11 +6,13 @@ public class MySQLConnection {
 
     }
 
-    public static void connect() {
+    public static Connection getConnection() {
+        Connection con = null;
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/Minesweeper", "root", "root");
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/Minesweeper", "root", "root");
             //Database name = Minesweeper
+            /*
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery("select * from minesweeper.users"); //will fetch everything from users table
             while (rs.next()) { //int, string, string, string, int, int, int, time, time, time
@@ -18,8 +20,11 @@ public class MySQLConnection {
                 System.out.println(rs.getString(1) + " " + rs.getString(2) + " " + rs.getString(3));
                 con.close();
             }
+            */
         } catch (Exception e) {
             System.out.println("Error: " + e);
         }
+
+        return con;
     }
 }
