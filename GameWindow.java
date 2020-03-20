@@ -160,7 +160,7 @@ public class GameWindow extends JFrame implements ActionListener{
             
             if (Minesweeper.checkGameWon(Minesweeper.board, Minesweeper.dimensions, Minesweeper.isMine)) {
                 Minesweeper.playGame(Minesweeper.board, Minesweeper.dimensions, Minesweeper.isMine); //inefficient but works
-                if (gameBoard[i] == 'f') {
+                if (gameBoard[i] == 'f'){
                     select[i].setText("f");
                 } else {
                     select[i].setText(String.valueOf(gameBoard[i]));

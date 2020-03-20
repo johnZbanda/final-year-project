@@ -271,16 +271,14 @@ public class Minesweeper {
     public static boolean checkGameWon(char[][] board, int dimensions, boolean[][] isMine) {
         boolean gameWon = true;
         int win = 0;
-        int winCondition = ((dimensions * dimensions) - mines);
         for (int x = 0; x < dimensions; x++) {
             for (int y = 0; y < dimensions; y++) {
-                if (board[x][y] != '-') {
+                 if (board[x][y] == '-' || (board[x][y] == 'f' && isMine[x][y] == true)) { //it reads flags as a plus on the win condition
                     win++;
                 }
             }
         }
-
-        if (win >= winCondition) {
+        if (win == mines) {
             gameWon = true;
         } else {
             gameWon = false;
