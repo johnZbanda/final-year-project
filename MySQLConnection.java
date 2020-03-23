@@ -1,4 +1,5 @@
 import java.sql.*;
+//import com.mysql.jdbc.Driver;
 
 public class MySQLConnection {
 
@@ -6,13 +7,16 @@ public class MySQLConnection {
 
     }
 
+    // java -cp ".;mysql-connector-java-8.0.15.jar" Minesweeper
+
     public static Connection getConnection() {
         Connection con = null;
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/Minesweeper", "root", "root"); 
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/minesweeper", "root", "root");
+            System.out.println("Connection to database");
         } catch (Exception e) {
-            System.out.println("Error: " + e);
+            System.out.println("MySQLConnection Error: " + e);
         }
 
         return con;

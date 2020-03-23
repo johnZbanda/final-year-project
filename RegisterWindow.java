@@ -2,6 +2,7 @@ import java.sql.*;
 import java.util.logging.*;
 import javax.swing.*;
 import java.awt.event.*;
+//import com.mysql.jdbc.Driver;
 
 public class RegisterWindow extends JFrame implements ActionListener {
     
@@ -11,32 +12,42 @@ public class RegisterWindow extends JFrame implements ActionListener {
     JTextField usernameTField;
     JTextField passwordTField;
     JTextField repassTField;
+    JLabel usernameLabel, passwordLabel, repassLabel;
 
     public RegisterWindow() {
         setLayout(null);
 
         super.setTitle("Register Window");
-        super.setSize(800, 200);
-        super.setResizable(false);
+        super.setSize(400, 230);
+        super.setResizable(true);
         super.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         super.setVisible(true);
 
         register = new JButton("Register");
-        usernameTField = new JTextField("Username: ", 10);
-        passwordTField = new JTextField("Password: ", 10); //text in the box, columns
-        repassTField = new JTextField("Re-Enter Password: ", 10);
+        usernameTField = new JTextField();
+        passwordTField = new JTextField(); //text in the box, columns
+        repassTField = new JTextField();
+        usernameLabel = new JLabel(" - Username");
+        passwordLabel = new JLabel(" - Password");
+        repassLabel = new JLabel(" - Retype Password");
 
         register.addActionListener(this);
 
-        register.setBounds(200, 100, 100, 40);
-        usernameTField.setBounds(70, 40, 200, 30);
-        passwordTField.setBounds(200, 40, 200, 30);
-        repassTField.setBounds(340, 40, 200, 30);
+        register.setBounds(140, 120, 100, 40);
+        usernameTField.setBounds(30, 20, 200, 30);
+        passwordTField.setBounds(30, 50, 200, 30);
+        repassTField.setBounds(30, 80, 200, 30);
+        usernameLabel.setBounds(250, 20, 200, 30);
+        passwordLabel.setBounds(250, 50, 200, 30);
+        repassLabel.setBounds(250, 80, 200, 30);
 
         super.add(register);
         super.add(usernameTField);
         super.add(passwordTField);
         super.add(repassTField);
+        super.add(usernameLabel);
+        super.add(passwordLabel);
+        super.add(repassLabel);
 
     }
     
@@ -44,7 +55,7 @@ public class RegisterWindow extends JFrame implements ActionListener {
         boolean check = false;
         PreparedStatement ps;
         ResultSet rs;
-        String query = "SELECT * FROM `minesweeper.users` WHERE username = ?";
+        String query = "SELECT * FROM `users` WHERE username = ?";
 
         try {
            ps = MySQLConnection.getConnection().prepareStatement(query);
@@ -71,11 +82,14 @@ public class RegisterWindow extends JFrame implements ActionListener {
             JOptionPane.showMessageDialog(null, "Add a Username");
         } else if (pWord.equals("")) {
             JOptionPane.showMessageDialog(null, "Add a Password");
-        } else if (rpWord.equals(pWord)) {
+        } else if (!rpWord.equals(pWord)) {
             JOptionPane.showMessageDialog(null, "Retype the Password again");
+        } else if (checkUsername(uName)) {
+            JOptionPane.showMessageDialog(null, "User already exists");
         } else {
             PreparedStatement ps;
-            String query = "INSERT INTO `minesweeper.user` (`username`, `password`) VALUES (?,?)";
+            String query = "INSERT INTO `users` (`username`, `password`) VALUES (?,?)";
+            //(" + uName + "," + pWord + ")"
 
             try {
                 ps = MySQLConnection.getConnection().prepareStatement(query);
