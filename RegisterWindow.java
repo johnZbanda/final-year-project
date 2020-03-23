@@ -1,9 +1,7 @@
 import java.sql.*;
 import java.util.logging.*;
-import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
-import java.sql.*;
 
 public class RegisterWindow extends JFrame implements ActionListener {
     
@@ -15,17 +13,31 @@ public class RegisterWindow extends JFrame implements ActionListener {
     JTextField repassTField;
 
     public RegisterWindow() {
-        JFrame f = new JFrame("Register Window");
-        f.getContentPane().setLayout(new FlowLayout());
+        setLayout(null);
+
+        super.setTitle("Register Window");
+        super.setSize(800, 200);
+        super.setResizable(false);
+        super.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        super.setVisible(true);
+
+        register = new JButton("Register");
         usernameTField = new JTextField("Username: ", 10);
         passwordTField = new JTextField("Password: ", 10); //text in the box, columns
         repassTField = new JTextField("Re-Enter Password: ", 10);
-        f.getContentPane().add(usernameTField);
-        f.getContentPane().add(passwordTField);
-        f.getContentPane().add(repassTField);
 
-        f.pack();
-        f.setVisible(true);
+        register.addActionListener(this);
+
+        register.setBounds(200, 100, 100, 40);
+        usernameTField.setBounds(70, 40, 200, 30);
+        passwordTField.setBounds(200, 40, 200, 30);
+        repassTField.setBounds(340, 40, 200, 30);
+
+        super.add(register);
+        super.add(usernameTField);
+        super.add(passwordTField);
+        super.add(repassTField);
+
     }
     
     public boolean checkUsername(String username) { //checks if the username has already been taken
@@ -63,7 +75,7 @@ public class RegisterWindow extends JFrame implements ActionListener {
             JOptionPane.showMessageDialog(null, "Retype the Password again");
         } else {
             PreparedStatement ps;
-            String query = "INSERT INTO `minesweeper.user` (`username`, `password`, `gamesPlayed`, `percentageOfWins`, `bestTime`, `averageTime`, `totalTime`) VALUES (?,?,0,0,0,0,0)";
+            String query = "INSERT INTO `minesweeper.user` (`username`, `password`) VALUES (?,?)";
 
             try {
                 ps = MySQLConnection.getConnection().prepareStatement(query);

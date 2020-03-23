@@ -29,7 +29,7 @@ public class Minesweeper {
 
     public static void main(String[] args) {
 
-        DifficultyWindow difficultyWindow = new DifficultyWindow();
+        new DifficultyWindow();
 
     }
 
@@ -54,7 +54,7 @@ public class Minesweeper {
             initBoard(board, dimensions);
             initMines(board, isMine, dimensions, mines);
             displayBoard(board, dimensions);
-            GameWindow gameWindow = new GameWindow();
+            new GameWindow();
             //playGame(board, dimensions, isMine);
     }
 
