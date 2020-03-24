@@ -17,6 +17,7 @@ public class GameWindow extends JFrame implements ActionListener{
     JButton select[];
     JButton bFlag;
     JButton quit;
+    JLabel timer;
     private final long start;
     double time = 0.0;
     
@@ -32,6 +33,7 @@ public class GameWindow extends JFrame implements ActionListener{
         //super.getContentPane().setBackground(Color.YELLOW);
         bFlag = new JButton("Flag - On");
         quit = new JButton("Quit");
+        timer = new JLabel("Timer: ");
         Minesweeper.flag = 'x';
         for (i = 0; i < (Minesweeper.dimensions * Minesweeper.dimensions); i++) {
             select[i] = new JButton(Integer.toString(i)); //makes it easier to get the values
@@ -67,22 +69,26 @@ public class GameWindow extends JFrame implements ActionListener{
         quit.addActionListener(this);
         bFlag.setFont(new Font("Arial", Font.PLAIN, 10));
         quit.setFont(new Font("Arial", Font.PLAIN, 10));
+        timer.setFont(new Font("Arial", Font.BOLD, 10));
         switch (Minesweeper.difficulty) {
             case 1:
                 bFlag.setBounds(520, 60, 90, 30);
                 quit.setBounds(520, 120, 90, 30);
+                timer.setBounds(520, 180, 90, 30);
                 super.setSize(650,350);
                 super.setTitle("Minesweeper - Beginner");
                 break;
             case 2:
                 bFlag.setBounds(890, 60, 90, 30);
                 quit.setBounds(890, 120, 90, 30);
+                timer.setBounds(890, 180, 90, 30);
                 super.setSize(1050,550);
                 super.setTitle("Minesweeper - Intermediate");
                 break;
             case 3:
                 bFlag.setBounds(1260, 60, 90, 30);
                 quit.setBounds(1260, 120, 90, 30);
+                timer.setBounds(1260, 180, 90, 30);
                 super.setSize(1720,980);
                 super.setTitle("Minesweeper - Advanced");
                 break;
@@ -91,6 +97,7 @@ public class GameWindow extends JFrame implements ActionListener{
         quit.setEnabled(true);
         super.add(quit);
         super.add(bFlag);
+        super.add(timer);
         super.setResizable(true);
         super.setVisible(true);
     }
@@ -111,8 +118,8 @@ public class GameWindow extends JFrame implements ActionListener{
     public void actionPerformed(ActionEvent e) {
         //wont need display board - might display for testing
         //implement playGame 
-        time = this.elaspedTime(); //timer works
-        System.out.println("Time: " + time);
+        boolean gameWon = false;
+        boolean gameLost = false;
         for (int i = 0; i < (Minesweeper.dimensions * Minesweeper.dimensions); i++) {
             System.out.println(i + ": Pressed");
             //seprate if statments
@@ -133,8 +140,11 @@ public class GameWindow extends JFrame implements ActionListener{
                     updateFlagUI(i);
                 } else {    
                     if (Minesweeper.checkGameLost(Minesweeper.isMine, Minesweeper.row, Minesweeper.column)) {
-                        System.out.println("Check");
+                        gameLost = true;
                         loseUI();
+                    } else if (Minesweeper.checkGameWon(Minesweeper.board, Minesweeper.dimensions, Minesweeper.isMine)) {
+                        gameWon = true;
+                        updateUI();
                     } else {
                         updateUI();    
                     }                 
@@ -166,6 +176,26 @@ public class GameWindow extends JFrame implements ActionListener{
                 break;
             }
         }
+        time = this.elaspedTime(); //timer works
+        timer.setText("Timer: " + time);
+        if (gameWon || gameLost) {
+            //This works so:-
+            /*
+                _________USERS TABLE_______
+                Create functions to calculate the rows
+                gamesPlayed = Increment by one - Use COUNT
+                percentageOfWins = x: Get number of games played. y:Get number of wins from games table. (x/y) * 100
+
+                ________GAMES TABLE________
+                USE INSERT INTO TO ADD TO TABLE
+                Get the User ID from Difficulty Window
+                Get the Difficulty from this class
+                Get the time taken from the variable time
+                Do a INSERT INTO statement adding to `game` - Similar to Register Window
+
+            */
+        }
+        //if user wins or loses, get the timer for that time and put it into the database.
     }
 
     public void updateUI() {
