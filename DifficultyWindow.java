@@ -65,6 +65,7 @@ public class DifficultyWindow extends JFrame implements ActionListener{
             Minesweeper.chooseDifficulty();   
         } else if (str.equals("Login")) {
             //new window to login, once logged in, they should go straight into the game as that user
+            new LoginWindow();
         } else if (str.equals("Register")) {
             new RegisterWindow();
             //new window to register, once registered, they should go straight into the database and their information will be added to the oit

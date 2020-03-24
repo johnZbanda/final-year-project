@@ -55,11 +55,11 @@ public class RegisterWindow extends JFrame implements ActionListener {
         boolean check = false;
         PreparedStatement ps;
         ResultSet rs;
-        String query = "SELECT * FROM `users` WHERE username = ?";
+        String query = "SELECT * FROM `users` WHERE `username` = ?";
 
         try {
            ps = MySQLConnection.getConnection().prepareStatement(query);
-           ps.setString(1, username); //why is it, 1 and username? 
+           ps.setString(1, username); 
            
            rs = ps.executeQuery();
 
