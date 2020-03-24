@@ -12,6 +12,7 @@ public class LoginWindow extends JFrame implements ActionListener{
     JTextField passwordTField;
     JLabel usernameLabel, passwordLabel;
     DifficultyWindow difficultyWindow;
+    int userID = 0;
 
     public LoginWindow() {
         setLayout(null);
@@ -50,7 +51,7 @@ public class LoginWindow extends JFrame implements ActionListener{
         ResultSet rs;
         String uName = usernameTField.getText();
         String pWord = passwordTField.getText();
-
+        //String getIDquery = "SELECT `idUsers` FROM `users` WHERE `username` = ? AND `password` = ?";
         String query = "SELECT * FROM `users` WHERE `username` = ? AND `password` = ?";
         //will need to get the ID from that user
         try {
@@ -60,7 +61,9 @@ public class LoginWindow extends JFrame implements ActionListener{
 
             rs = ps.executeQuery();
 
-            if (rs.next()) {
+            if (rs.next()) { 
+                DifficultyWindow.userID = rs.getInt(1);
+                System.out.println("Login - User ID: " + DifficultyWindow.userID);
                 JOptionPane.showMessageDialog(null, "Welcome " + uName + "!", "Login Succeeded", 2);
                 //get the ID value here. Then send it to the difficulty and game windows.
                 //Users might not be able to log out. 

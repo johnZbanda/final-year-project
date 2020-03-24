@@ -17,15 +17,18 @@ public class GameWindow extends JFrame implements ActionListener{
     JButton select[];
     JButton bFlag;
     JButton quit;
+    private final long start;
+    double time = 0.0;
     
     public GameWindow() {
         x = 0;
         y = 0;
+        start = System.currentTimeMillis();
         setLayout(null);
         super.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         select = new JButton[Minesweeper.dimensions * Minesweeper.dimensions]; //initialise buttons
         gameBoard = new char[Minesweeper.dimensions * Minesweeper.dimensions]; //used to hold
-        mineBoard = new boolean[Minesweeper.dimensions * Minesweeper.dimensions];
+        //mineBoard = new boolean[Minesweeper.dimensions * Minesweeper.dimensions];
         //super.getContentPane().setBackground(Color.YELLOW);
         bFlag = new JButton("Flag - On");
         quit = new JButton("Quit");
@@ -41,7 +44,7 @@ public class GameWindow extends JFrame implements ActionListener{
                 select[i].setFont(new Font("Arial", Font.PLAIN, 9));
                 select[i].setForeground(Color.BLACK);
                 gameBoard[i] = Minesweeper.board[x][y];
-                mineBoard[i] = Minesweeper.isMine[x][y];
+                //mineBoard[i] = Minesweeper.isMine[x][y];
                 //System.out.println("i: " + i + " x: " + x + " y: " + y + " mine: " + mineBoard[i]);
                 x = 0; y++;
                 super.add(select[i]);
@@ -53,7 +56,7 @@ public class GameWindow extends JFrame implements ActionListener{
                 select[i].setFont(new Font("Arial", Font.PLAIN, 9));
                 select[i].setForeground(Color.BLACK);
                 gameBoard[i] = Minesweeper.board[x][y];
-                mineBoard[i] = Minesweeper.isMine[x][y];
+                //mineBoard[i] = Minesweeper.isMine[x][y];
                 //System.out.println("i: " + i + " x: " + x + " y: " + y + " mine: " + mineBoard[i]);
                 super.add(select[i]);
                 x++;
@@ -92,10 +95,24 @@ public class GameWindow extends JFrame implements ActionListener{
         super.setVisible(true);
     }
     
+    public double elaspedTime() {
+        long now = System.currentTimeMillis();
+        return (now - start) / 1000.0;
+    }
+    //In Action Performed: You will need to implement
+    /*
+        - Stats button
+        - Timer
+        - Adding the timer and the difficulty when they've played a game
+        - Update the users table after a game has been won or lost
+    */
+
     @Override
     public void actionPerformed(ActionEvent e) {
         //wont need display board - might display for testing
-        //implement playGame
+        //implement playGame 
+        time = this.elaspedTime(); //timer works
+        System.out.println("Time: " + time);
         for (int i = 0; i < (Minesweeper.dimensions * Minesweeper.dimensions); i++) {
             System.out.println(i + ": Pressed");
             //seprate if statments

@@ -4,15 +4,15 @@ import javax.swing.*;
 public class DifficultyWindow extends JFrame implements ActionListener{
 
     private static final long serialVersionUID = 1L;
-    Minesweeper game;
     JLabel title;
     JButton beginner;
     JButton intermediate;
     JButton advanced;
     JButton login;
     JButton register;
-    GameWindow gameWindow;
     int difficulty;
+    static int userID = 0;
+
     public DifficultyWindow() {
         setLayout(null);
 
@@ -48,7 +48,6 @@ public class DifficultyWindow extends JFrame implements ActionListener{
         super.add(advanced);
         super.add(login);
         super.add(register);
-
     }
 
     public void actionPerformed(ActionEvent e) { //separate the clicks
