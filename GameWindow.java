@@ -1,6 +1,8 @@
 import java.awt.*;
 import java.awt.event.*; //For ActionListener
 import javax.swing.*; //Using Java Swing for 
+import java.sql.*;
+import java.util.logging.*;
 //import java.awt.*;
 
 public class GameWindow extends JFrame implements ActionListener{
@@ -179,23 +181,56 @@ public class GameWindow extends JFrame implements ActionListener{
         time = this.elaspedTime(); //timer works
         timer.setText("Timer: " + time);
         if (gameWon || gameLost) {
-            //This works so:-
+            //db = database value
+            //This works so:- INSERT INTO `minesweeper`.`game` (`userID`, `difficulty`, `timeTaken`, `win`) VALUES ('1', '1', '15.902', '1');
+            if (DifficultyWindow.userID > 0) {
+                int dbWin = 0;
+                if (gameWon) {
+                    dbWin = 1;
+                }
+                PreparedStatement ps;
+                String query = "INSERT INTO `game` (`userID`, `difficulty`, `timeTaken`, `win`) VALUES (?,?,?,?)";
+                try {
+                    ps = MySQLConnection.getConnection().prepareStatement(query);
+                    ps.setInt(1, DifficultyWindow.userID);
+                    ps.setInt(2, Minesweeper.difficulty);
+                    ps.setDouble(3, time);
+                    ps.setInt(4, dbWin);
+                    if (ps.executeUpdate() > 0) {
+                        displayWinOrLossMessage(gameWon, gameLost);
+                        JOptionPane.showMessageDialog(null, "Game saved into database");
+                    }
+                } catch (SQLException ex) {
+                    Logger.getLogger(GameWindow.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            } else {
+                displayWinOrLossMessage(gameWon, gameLost);
+            }
+            
+            //prompt user to quit to select a difficulty or to press play again
             /*
-                _________USERS TABLE_______
+                _________USERS TABLE_______ - To do in this.
                 Create functions to calculate the rows
                 gamesPlayed = Increment by one - Use COUNT
                 percentageOfWins = x: Get number of games played. y:Get number of wins from games table. (x/y) * 100
-
-                ________GAMES TABLE________
-                USE INSERT INTO TO ADD TO TABLE
-                Get the User ID from Difficulty Window
-                Get the Difficulty from this class
-                Get the time taken from the variable time
-                Do a INSERT INTO statement adding to `game` - Similar to Register Window
-
+                bestTime = Comparison of times from games table. Loweset is the best. Use MIN
+                averageTime = All times added together then divided by the number of games played
+                totalTime = Summation of all the times
             */
         }
-        //if user wins or loses, get the timer for that time and put it into the database.
+    }
+    
+    public void updateUsersTable() {
+
+    }
+
+    public void displayWinOrLossMessage(boolean gameWon, boolean gameLost) {
+        if (gameWon) {
+            JOptionPane.showMessageDialog(null, "CONGRATULATIONS, YOU WON!! Time = " + time);
+        }
+        if (gameLost) {
+            JOptionPane.showMessageDialog(null, "TOO BAD, YOU LOST!! Time = " + time + " Mine found at: " + Minesweeper.column + "," + Minesweeper.row);
+        }
     }
 
     public void updateUI() {
