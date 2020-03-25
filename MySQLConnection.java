@@ -8,6 +8,7 @@ public class MySQLConnection {
     }
 
     // java -cp ".;mysql-connector-java-8.0.15.jar" Minesweeper
+    // javac Minesweeper.java GameWindow.java DifficultyWindow.java LoginWindow.java RegisterWindow.java MySQLConnection.java
 
     public static Connection getConnection() {
         Connection con = null;

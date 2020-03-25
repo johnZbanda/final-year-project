@@ -20,6 +20,7 @@ public class GameWindow extends JFrame implements ActionListener{
     JButton bFlag;
     JButton quit;
     JLabel timer;
+    JLabel flagsLeft;
     private final long start;
     double time = 0.0;
     
@@ -36,6 +37,7 @@ public class GameWindow extends JFrame implements ActionListener{
         bFlag = new JButton("Flag - On");
         quit = new JButton("Quit");
         timer = new JLabel("Timer: ");
+        flagsLeft = new JLabel ("Flags Left: " + (Minesweeper.mines - Minesweeper.flagTotal));
         Minesweeper.flag = 'x';
         for (i = 0; i < (Minesweeper.dimensions * Minesweeper.dimensions); i++) {
             select[i] = new JButton(Integer.toString(i)); //makes it easier to get the values
@@ -72,11 +74,13 @@ public class GameWindow extends JFrame implements ActionListener{
         bFlag.setFont(new Font("Arial", Font.PLAIN, 10));
         quit.setFont(new Font("Arial", Font.PLAIN, 10));
         timer.setFont(new Font("Arial", Font.BOLD, 10));
+        flagsLeft.setFont(new Font("Arial", Font.BOLD, 10));
         switch (Minesweeper.difficulty) {
             case 1:
                 bFlag.setBounds(520, 60, 90, 30);
                 quit.setBounds(520, 120, 90, 30);
                 timer.setBounds(520, 180, 90, 30);
+                flagsLeft.setBounds(520, 200, 90, 30);
                 super.setSize(650,350);
                 super.setTitle("Minesweeper - Beginner");
                 break;
@@ -84,6 +88,7 @@ public class GameWindow extends JFrame implements ActionListener{
                 bFlag.setBounds(890, 60, 90, 30);
                 quit.setBounds(890, 120, 90, 30);
                 timer.setBounds(890, 180, 90, 30);
+                flagsLeft.setBounds(890, 200, 90, 30);
                 super.setSize(1050,550);
                 super.setTitle("Minesweeper - Intermediate");
                 break;
@@ -91,6 +96,7 @@ public class GameWindow extends JFrame implements ActionListener{
                 bFlag.setBounds(1260, 60, 90, 30);
                 quit.setBounds(1260, 120, 90, 30);
                 timer.setBounds(1260, 180, 90, 30);
+                flagsLeft.setBounds(1260, 200, 90, 30);
                 super.setSize(1720,980);
                 super.setTitle("Minesweeper - Advanced");
                 break;
@@ -100,6 +106,7 @@ public class GameWindow extends JFrame implements ActionListener{
         super.add(quit);
         super.add(bFlag);
         super.add(timer);
+        super.add(flagsLeft);
         super.setResizable(true);
         super.setVisible(true);
     }
@@ -178,6 +185,8 @@ public class GameWindow extends JFrame implements ActionListener{
                 break;
             }
         }
+        flagsLeft.setText("Flags Left: " + (Minesweeper.mines - Minesweeper.flagTotal));
+
         time = this.elaspedTime(); //timer works
         timer.setText("Timer: " + time);
         if (gameWon || gameLost) {
@@ -190,6 +199,7 @@ public class GameWindow extends JFrame implements ActionListener{
                 }
                 PreparedStatement ps;
                 String query = "INSERT INTO `game` (`userID`, `difficulty`, `timeTaken`, `win`) VALUES (?,?,?,?)";
+                //adding into game table
                 try {
                     ps = MySQLConnection.getConnection().prepareStatement(query);
                     ps.setInt(1, DifficultyWindow.userID);
@@ -198,10 +208,22 @@ public class GameWindow extends JFrame implements ActionListener{
                     ps.setInt(4, dbWin);
                     if (ps.executeUpdate() > 0) {
                         displayWinOrLossMessage(gameWon, gameLost);
-                        JOptionPane.showMessageDialog(null, "Game saved into database");
+                        JOptionPane.showMessageDialog(null, "Game saved into database - GAME TABLE");
                     }
                 } catch (SQLException ex) {
                     Logger.getLogger(GameWindow.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                //updating the user table
+                //query = "UPDATE `users` SET `gamesPlayed` = ?, `bestTime` = ?, `averageTime` = ?, `totalTime` = ? WHERE (`idUsers` = ?);";
+                try {
+                    ps = MySQLConnection.getConnection().prepareStatement(query);
+                    //gamesPlayed statement -> SELECT COUNT (*) FROM `game` WHERE `userID` = ?
+                    //percentageWins (2 statements) -> use gamesPlayed and SELECT COUNT (*) FROM `game` WHERE `userID` = ? AND `win` = ?
+                    //bestTime -> SELECT MIN(`timeTaken`) AS `bestTime` FROM `game` WHERE `userID` = ? AND win = ?
+                    //totalTime -> SELECT SUM(`timeTaken`) AS `totalTime` FROM `game` WHERE `userID` = ?
+                    //averageTime
+                } catch (SQLException ex) {
+
                 }
             } else {
                 displayWinOrLossMessage(gameWon, gameLost);
@@ -218,10 +240,6 @@ public class GameWindow extends JFrame implements ActionListener{
                 totalTime = Summation of all the times
             */
         }
-    }
-    
-    public void updateUsersTable() {
-
     }
 
     public void displayWinOrLossMessage(boolean gameWon, boolean gameLost) {

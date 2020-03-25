@@ -21,6 +21,7 @@ public class Minesweeper {
     static int row;
     static int column;// this will be the input
     static char flag;
+    static int flagTotal;
     GameWindow gameWindow;
 
     public Minesweeper() { // constructor
@@ -61,7 +62,7 @@ public class Minesweeper {
     public static void playGame(char[][] board, int dimensions, boolean[][] isMine) {
         boolean gameWon = false;
         boolean gameLost = false;
-        int flagTotal = checkTotalFlags();
+        flagTotal = checkTotalFlags();
         
         if (flag == 'f') {
             System.out.println("Flag is on");
