@@ -191,7 +191,6 @@ public class GameWindow extends JFrame implements ActionListener{
         timer.setText("Timer: " + time);
         if (gameWon || gameLost) {
             //db = database value
-            //This works so:- INSERT INTO `minesweeper`.`game` (`userID`, `difficulty`, `timeTaken`, `win`) VALUES ('1', '1', '15.902', '1');
             if (DifficultyWindow.userID > 0) {
                 int dbWin = 0;
                 if (gameWon) {
@@ -213,33 +212,123 @@ public class GameWindow extends JFrame implements ActionListener{
                 } catch (SQLException ex) {
                     Logger.getLogger(GameWindow.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                //updating the user table
-                //query = "UPDATE `users` SET `gamesPlayed` = ?, `bestTime` = ?, `averageTime` = ?, `totalTime` = ? WHERE (`idUsers` = ?);";
-                try {
+                //updating the user table            
+                int gamesPlayed = getGamesPlayed();
+                double percentageWin = getPercentageWin(gamesPlayed, dbWin);
+                double bestTime = getBestTime(dbWin);
+                double averageTime = getAverageTime();
+                double totalTime = getTotalTime();
+                query = "UPDATE `users` SET `gamesPlayed` = ?, `percentageOfWins` = ?, `bestTime` = ?, `averageTime` = ?, `totalTime` = ? WHERE `idUsers` = ?;";
+                try { //table updated once and thats it for some reason?
                     ps = MySQLConnection.getConnection().prepareStatement(query);
-                    //gamesPlayed statement -> SELECT COUNT (*) FROM `game` WHERE `userID` = ?
-                    //percentageWins (2 statements) -> use gamesPlayed and SELECT COUNT (*) FROM `game` WHERE `userID` = ? AND `win` = ?
-                    //bestTime -> SELECT MIN(`timeTaken`) AS `bestTime` FROM `game` WHERE `userID` = ? AND win = ?
-                    //totalTime -> SELECT SUM(`timeTaken`) AS `totalTime` FROM `game` WHERE `userID` = ?
-                    //averageTime
+                    ps.setInt(1, gamesPlayed);
+                    ps.setDouble(2, percentageWin);
+                    ps.setDouble(3, bestTime);
+                    ps.setDouble(4, averageTime);
+                    ps.setDouble(5, totalTime);
+                    ps.setInt(6, DifficultyWindow.userID);
+                    if (ps.executeUpdate() > 0) {
+                        JOptionPane.showMessageDialog(null, "User table updated");
+                    }
                 } catch (SQLException ex) {
-
+                    Logger.getLogger(GameWindow.class.getName()).log(Level.SEVERE, null, ex);
                 }
             } else {
                 displayWinOrLossMessage(gameWon, gameLost);
             }
-            
-            //prompt user to quit to select a difficulty or to press play again
-            /*
-                _________USERS TABLE_______ - To do in this.
-                Create functions to calculate the rows
-                gamesPlayed = Increment by one - Use COUNT
-                percentageOfWins = x: Get number of games played. y:Get number of wins from games table. (x/y) * 100
-                bestTime = Comparison of times from games table. Loweset is the best. Use MIN
-                averageTime = All times added together then divided by the number of games played
-                totalTime = Summation of all the times
-            */
         }
+    }
+
+    public int getGamesPlayed() { //works
+        int gamesPlayed = 0;
+        PreparedStatement ps;
+        ResultSet rs;
+        String query = "SELECT COUNT(0) AS `gamesPlayed` FROM `game` WHERE `userID` = ?";
+        try {
+            ps = MySQLConnection.getConnection().prepareStatement(query);
+            ps.setInt(1, DifficultyWindow.userID);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                gamesPlayed = rs.getInt(1);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(GameWindow.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return gamesPlayed;
+    }
+
+    public double getPercentageWin(int gamesPlayed, int dbWin) {
+        double percentageWin = 0;
+        PreparedStatement ps;
+        ResultSet rs;
+        String query = "SELECT COUNT(0) FROM `game` WHERE `userID` = ? AND `win` = ?";
+        try {
+            ps = MySQLConnection.getConnection().prepareStatement(query);
+            ps.setInt(1, DifficultyWindow.userID);
+            ps.setInt(2, dbWin);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                percentageWin = rs.getDouble(1);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(GameWindow.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return percentageWin;
+    }
+
+    public double getBestTime(int dbWin) {
+        double bestTime = 0;
+        PreparedStatement ps;
+        ResultSet rs;
+        String query = "SELECT MIN(`timeTaken`) AS `bestTime` FROM `game` WHERE `userID` = ? AND win = ?";
+        try {
+            ps = MySQLConnection.getConnection().prepareStatement(query);
+            ps.setInt(1, DifficultyWindow.userID);
+            ps.setInt(2, dbWin);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                bestTime = rs.getDouble(1);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(GameWindow.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return bestTime;
+    }
+
+    public double getAverageTime() {
+        double averageTime = 0;
+        PreparedStatement ps;
+        ResultSet rs;
+        String query = "SELECT AVG(`timeTaken`) AS `averagetime` FROM `game` WHERE userID = ?";
+        try {
+            ps = MySQLConnection.getConnection().prepareStatement(query);
+            ps.setInt(1, DifficultyWindow.userID);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                averageTime = rs.getDouble(1);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(GameWindow.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return averageTime;
+    }
+
+    public double getTotalTime() {
+        double totalTime = 0;
+        PreparedStatement ps;
+        ResultSet rs;
+        String query = "SELECT SUM(`timeTaken`) AS `totalTime` FROM `game` WHERE `userID` = ?";
+        try {
+            ps = MySQLConnection.getConnection().prepareStatement(query);
+            ps.setInt(1, DifficultyWindow.userID);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                totalTime = rs.getDouble(1);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(GameWindow.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return totalTime;
     }
 
     public void displayWinOrLossMessage(boolean gameWon, boolean gameLost) {
