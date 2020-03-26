@@ -79,24 +79,24 @@ public class GameWindow extends JFrame implements ActionListener{
             case 1:
                 bFlag.setBounds(520, 60, 90, 30);
                 quit.setBounds(520, 120, 90, 30);
-                timer.setBounds(520, 180, 90, 30);
-                flagsLeft.setBounds(520, 200, 90, 30);
+                timer.setBounds(520, 160, 90, 30);
+                flagsLeft.setBounds(520, 180, 90, 30);
                 super.setSize(650,350);
                 super.setTitle("Minesweeper - Beginner");
                 break;
             case 2:
                 bFlag.setBounds(890, 60, 90, 30);
                 quit.setBounds(890, 120, 90, 30);
-                timer.setBounds(890, 180, 90, 30);
-                flagsLeft.setBounds(890, 200, 90, 30);
+                timer.setBounds(890, 160, 90, 30);
+                flagsLeft.setBounds(890, 180, 90, 30);
                 super.setSize(1050,550);
                 super.setTitle("Minesweeper - Intermediate");
                 break;
             case 3:
                 bFlag.setBounds(1260, 60, 90, 30);
                 quit.setBounds(1260, 120, 90, 30);
-                timer.setBounds(1260, 180, 90, 30);
-                flagsLeft.setBounds(1260, 200, 90, 30);
+                timer.setBounds(1260, 160, 90, 30);
+                flagsLeft.setBounds(1260, 180, 90, 30);
                 super.setSize(1720,980);
                 super.setTitle("Minesweeper - Advanced");
                 break;
@@ -159,7 +159,10 @@ public class GameWindow extends JFrame implements ActionListener{
                     }                 
                     changeNumberColour(i);
                 }
-            
+                calcCoordinates(i); //used for displaying the figure when it says you'v el
+
+                Minesweeper.row = y;
+                Minesweeper.column = x;
                 break;
 
             } else if (e.getActionCommand().equals("Flag - On")) {
@@ -258,7 +261,8 @@ public class GameWindow extends JFrame implements ActionListener{
     }
 
     public double getPercentageWin(int gamesPlayed, int dbWin) {
-        double percentageWin = 0;
+        int wonGames = 0;
+        double percentageWin = 0.00;
         PreparedStatement ps;
         ResultSet rs;
         String query = "SELECT COUNT(0) FROM `game` WHERE `userID` = ? AND `win` = ?";
@@ -268,11 +272,12 @@ public class GameWindow extends JFrame implements ActionListener{
             ps.setInt(2, dbWin);
             rs = ps.executeQuery();
             if (rs.next()) {
-                percentageWin = rs.getDouble(1);
+                wonGames = rs.getInt(1);
             }
         } catch (SQLException ex) {
             Logger.getLogger(GameWindow.class.getName()).log(Level.SEVERE, null, ex);
         }
+        percentageWin = (wonGames * 100.00 / gamesPlayed);
         return percentageWin;
     }
 

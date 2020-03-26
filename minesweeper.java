@@ -74,7 +74,7 @@ public class Minesweeper {
         if (gameLost == true) {
             //updateBoard(board, dimensions, row, column, flag, isMine);
             displayLostBoard(board, dimensions, isMine);
-            System.out.println("You Lose! You found a Mine at " + row + "," + column);
+            System.out.println("You Lose! You found a Mine at " + column + "," + row);
 
         } else if (gameWon == true) {
             updateBoard(board, dimensions, row, column, flag, isMine);
