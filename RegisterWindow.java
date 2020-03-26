@@ -98,6 +98,7 @@ public class RegisterWindow extends JFrame implements ActionListener {
 
                 if (ps.executeUpdate() > 0) {
                     JOptionPane.showMessageDialog(null, "New User Added");
+                    dispose();
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(RegisterWindow.class.getName()).log(Level.SEVERE, null, ex);
