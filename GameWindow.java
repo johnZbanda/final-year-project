@@ -19,6 +19,8 @@ public class GameWindow extends JFrame implements ActionListener{
     JButton select[];
     JButton bFlag;
     JButton quit;
+    JButton stats;
+    JButton playAgain;
     JLabel timer;
     JLabel flagsLeft;
     private final long start;
@@ -38,6 +40,8 @@ public class GameWindow extends JFrame implements ActionListener{
         quit = new JButton("Quit");
         timer = new JLabel("Timer: ");
         flagsLeft = new JLabel ("Flags Left: " + (Minesweeper.mines - Minesweeper.flagTotal));
+        playAgain = new JButton("Play Again");
+        stats = new JButton("Stats");
         Minesweeper.flag = 'x';
         for (i = 0; i < (Minesweeper.dimensions * Minesweeper.dimensions); i++) {
             select[i] = new JButton(Integer.toString(i)); //makes it easier to get the values
@@ -71,42 +75,56 @@ public class GameWindow extends JFrame implements ActionListener{
         }
         bFlag.addActionListener(this);
         quit.addActionListener(this);
+        playAgain.addActionListener(this);
+        stats.addActionListener(this);
         bFlag.setFont(new Font("Arial", Font.PLAIN, 10));
         quit.setFont(new Font("Arial", Font.PLAIN, 10));
         timer.setFont(new Font("Arial", Font.BOLD, 10));
         flagsLeft.setFont(new Font("Arial", Font.BOLD, 10));
+        playAgain.setFont(new Font("Arial", Font.BOLD, 10));
+        stats.setFont(new Font("Arial", Font.BOLD, 10));
         switch (Minesweeper.difficulty) {
             case 1:
-                bFlag.setBounds(520, 60, 90, 30);
-                quit.setBounds(520, 120, 90, 30);
-                timer.setBounds(520, 160, 90, 30);
-                flagsLeft.setBounds(520, 180, 90, 30);
+                bFlag.setBounds(520, 40, 90, 30);
+                quit.setBounds(520, 80, 90, 30);
+                timer.setBounds(520, 120, 90, 30);
+                flagsLeft.setBounds(520, 140, 90, 30);
+                playAgain.setBounds(520, 180, 90, 30);
+                stats.setBounds(520, 220, 90, 30);
                 super.setSize(650,350);
                 super.setTitle("Minesweeper - Beginner");
                 break;
             case 2:
-                bFlag.setBounds(890, 60, 90, 30);
-                quit.setBounds(890, 120, 90, 30);
-                timer.setBounds(890, 160, 90, 30);
-                flagsLeft.setBounds(890, 180, 90, 30);
+                bFlag.setBounds(890, 40, 90, 30);
+                quit.setBounds(890, 80, 90, 30);
+                timer.setBounds(890, 120, 90, 30);
+                flagsLeft.setBounds(890, 140, 90, 30);
+                playAgain.setBounds(890, 180, 90, 30);
+                stats.setBounds(890, 220, 90, 30);
                 super.setSize(1050,550);
                 super.setTitle("Minesweeper - Intermediate");
                 break;
             case 3:
-                bFlag.setBounds(1260, 60, 90, 30);
-                quit.setBounds(1260, 120, 90, 30);
-                timer.setBounds(1260, 160, 90, 30);
-                flagsLeft.setBounds(1260, 180, 90, 30);
+                bFlag.setBounds(1260, 40, 90, 30);
+                quit.setBounds(1260, 80, 90, 30);
+                timer.setBounds(1260, 120, 90, 30);
+                flagsLeft.setBounds(1260, 140, 90, 30);
+                playAgain.setBounds(1260, 180, 90, 30);
+                stats.setBounds(1260, 220, 90, 30);
                 super.setSize(1720,980);
                 super.setTitle("Minesweeper - Advanced");
                 break;
         }
         bFlag.setEnabled(true);
         quit.setEnabled(true);
+        playAgain.setEnabled(true);
+        stats.setEnabled(true);
         super.add(quit);
         super.add(bFlag);
         super.add(timer);
         super.add(flagsLeft);
+        super.add(playAgain);
+        super.add(stats);
         super.setResizable(true);
         super.setVisible(true);
     }
@@ -115,13 +133,6 @@ public class GameWindow extends JFrame implements ActionListener{
         long now = System.currentTimeMillis();
         return (now - start) / 1000.0;
     }
-    //In Action Performed: You will need to implement
-    /*
-        - Stats button
-        - Timer
-        - Adding the timer and the difficulty when they've played a game
-        - Update the users table after a game has been won or lost
-    */
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -183,11 +194,45 @@ public class GameWindow extends JFrame implements ActionListener{
                 //updateUI();
                 updateFlagUI(i);
                 break;
-            } else if (e.getActionCommand().equals("Quit")) {
+            } else if (e.getActionCommand().equals("Quit")) {   
                 dispose();
+                break;
+            } else if (e.getActionCommand().equals("Play Again")) {
+                //System.out.println("Playing Again");
+                dispose();
+                Minesweeper.chooseDifficulty();
+                break;
+            } else if (e.getActionCommand().equals("Stats")) {
+                if (DifficultyWindow.userID > 0) {
+                    PreparedStatement ps;
+                    ResultSet rs;
+                    String query = "SELECT * FROM `users` WHERE `idUsers` = ?";
+                    try {
+                        ps = MySQLConnection.getConnection().prepareStatement(query);
+                        ps.setInt(1, DifficultyWindow.userID);
+
+                        rs = ps.executeQuery();
+                        while (rs.next()) {
+                            String username = rs.getString("username");
+                            int gamesPlayed = rs.getInt("gamesPlayed");
+                            double percentageOfWins = rs.getDouble("percentageOfWins");
+                            double bestTime = rs.getDouble("bestTime");
+                            double averageTime = rs.getDouble("averageTime");
+                            double totalTime = rs.getDouble("totalTime");
+                            JOptionPane.showMessageDialog(null, "Username: " + username + "\nGames Played: " + gamesPlayed 
+                            + "\nPercentage of Wins: " + percentageOfWins + "\nBest Time: " + bestTime + "\nAverage Time: " + 
+                            averageTime + "\nTotal Time: " + totalTime, username + " statistics", 2);
+                        }
+                    } catch (SQLException ex) {
+                        Logger.getLogger(GameWindow.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "You are not logged in");
+                }
                 break;
             }
         }
+
         flagsLeft.setText("Flags Left: " + (Minesweeper.mines - Minesweeper.flagTotal));
 
         time = this.elaspedTime(); //timer works
@@ -210,7 +255,7 @@ public class GameWindow extends JFrame implements ActionListener{
                     ps.setInt(4, dbWin);
                     if (ps.executeUpdate() > 0) {
                         displayWinOrLossMessage(gameWon, gameLost);
-                        JOptionPane.showMessageDialog(null, "Game saved into database - GAME TABLE");
+                        JOptionPane.showMessageDialog(null, "Game saved into database - GAME TABLE", "GAME Table Updated", 2);
                     }
                 } catch (SQLException ex) {
                     Logger.getLogger(GameWindow.class.getName()).log(Level.SEVERE, null, ex);
@@ -231,7 +276,7 @@ public class GameWindow extends JFrame implements ActionListener{
                     ps.setDouble(5, totalTime);
                     ps.setInt(6, DifficultyWindow.userID);
                     if (ps.executeUpdate() > 0) {
-                        JOptionPane.showMessageDialog(null, "User table updated");
+                        JOptionPane.showMessageDialog(null, "User table updated", "USER Table Updated", 2);
                     }
                 } catch (SQLException ex) {
                     Logger.getLogger(GameWindow.class.getName()).log(Level.SEVERE, null, ex);
@@ -338,10 +383,10 @@ public class GameWindow extends JFrame implements ActionListener{
 
     public void displayWinOrLossMessage(boolean gameWon, boolean gameLost) {
         if (gameWon) {
-            JOptionPane.showMessageDialog(null, "CONGRATULATIONS, YOU WON!! Time = " + time);
+            JOptionPane.showMessageDialog(null, "CONGRATULATIONS, YOU WON!! Time = " + time, "YOU WIN!", 2);
         }
         if (gameLost) {
-            JOptionPane.showMessageDialog(null, "TOO BAD, YOU LOST!! Time = " + time + " Mine found at: " + Minesweeper.column + "," + Minesweeper.row);
+            JOptionPane.showMessageDialog(null, "TOO BAD, YOU LOST!! Time = " + time + " Mine found at: " + Minesweeper.column + "," + Minesweeper.row, "YOU LOSE", 2);
         }
     }
 
