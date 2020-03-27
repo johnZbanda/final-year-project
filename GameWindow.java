@@ -168,7 +168,6 @@ public class GameWindow extends JFrame implements ActionListener{
                     } else {
                         updateUI();    
                     }                 
-                    changeNumberColour(i);
                 }
                 calcCoordinates(i); //used for displaying the figure when it says you'v el
 
@@ -461,18 +460,6 @@ public class GameWindow extends JFrame implements ActionListener{
                 y = (j / Minesweeper.dimensions) % Minesweeper.dimensions;
                 x = value;
             }
-        }
-    }
-
-    public void changeNumberColour(int i) {
-        gameBoard[i] = Minesweeper.board[Minesweeper.row][Minesweeper.column];
-        switch (gameBoard[i]) {
-            case '1':
-                select[i].getRootPane().setForeground(Color.RED);
-                break;
-            case '2':
-                select[i].setForeground(Color.BLUE);
-                break;
         }
     }
 }  

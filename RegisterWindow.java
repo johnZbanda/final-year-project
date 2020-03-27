@@ -105,6 +105,4 @@ public class RegisterWindow extends JFrame implements ActionListener {
             }
         }
     }
-
-
 }
