@@ -34,7 +34,7 @@ public class GameWindow extends JFrame implements ActionListener{
         super.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         select = new JButton[Minesweeper.dimensions * Minesweeper.dimensions]; //initialise buttons
         gameBoard = new char[Minesweeper.dimensions * Minesweeper.dimensions]; //used to hold
-        //mineBoard = new boolean[Minesweeper.dimensions * Minesweeper.dimensions];
+        mineBoard = new boolean[Minesweeper.dimensions * Minesweeper.dimensions];
         //super.getContentPane().setBackground(Color.YELLOW);
         bFlag = new JButton("Flag - On");
         quit = new JButton("Quit");
@@ -45,16 +45,16 @@ public class GameWindow extends JFrame implements ActionListener{
         Minesweeper.flag = 'x';
         for (i = 0; i < (Minesweeper.dimensions * Minesweeper.dimensions); i++) {
             select[i] = new JButton(Integer.toString(i)); //makes it easier to get the values
-
+            //try to hide the numbers
             if (x == Minesweeper.dimensions - 1) {   
                 select[i].addActionListener(this);
                 select[i].setBounds(50 * (x + 1), 28 * (y + 1), 50, 28);
                 select[i].setVisible(true);
-                select[i].setText(Integer.toString(i));
+                //select[i].setText(Integer.toString(i));
                 select[i].setFont(new Font("Arial", Font.PLAIN, 9));
                 select[i].setForeground(Color.BLACK);
                 gameBoard[i] = Minesweeper.board[x][y];
-                //mineBoard[i] = Minesweeper.isMine[x][y];
+                mineBoard[i] = Minesweeper.isMine[x][y];
                 //System.out.println("i: " + i + " x: " + x + " y: " + y + " mine: " + mineBoard[i]);
                 x = 0; y++;
                 super.add(select[i]);
@@ -62,11 +62,11 @@ public class GameWindow extends JFrame implements ActionListener{
                 select[i].addActionListener(this);
                 select[i].setBounds(50 * (x + 1), 28 * (y + 1), 50, 28);
                 select[i].setVisible(true);
-                select[i].setText(Integer.toString(i));
+                //select[i].setText(Integer.toString(i));
                 select[i].setFont(new Font("Arial", Font.PLAIN, 9));
                 select[i].setForeground(Color.BLACK);
                 gameBoard[i] = Minesweeper.board[x][y];
-                //mineBoard[i] = Minesweeper.isMine[x][y];
+                mineBoard[i] = Minesweeper.isMine[x][y];
                 //System.out.println("i: " + i + " x: " + x + " y: " + y + " mine: " + mineBoard[i]);
                 super.add(select[i]);
                 x++;
@@ -77,8 +77,8 @@ public class GameWindow extends JFrame implements ActionListener{
         quit.addActionListener(this);
         playAgain.addActionListener(this);
         stats.addActionListener(this);
-        bFlag.setFont(new Font("Arial", Font.PLAIN, 10));
-        quit.setFont(new Font("Arial", Font.PLAIN, 10));
+        bFlag.setFont(new Font("Arial", Font.BOLD, 10));
+        quit.setFont(new Font("Arial", Font.BOLD, 10));
         timer.setFont(new Font("Arial", Font.BOLD, 10));
         flagsLeft.setFont(new Font("Arial", Font.BOLD, 10));
         playAgain.setFont(new Font("Arial", Font.BOLD, 10));
@@ -105,6 +105,8 @@ public class GameWindow extends JFrame implements ActionListener{
                 super.setTitle("Minesweeper - Intermediate");
                 break;
             case 3:
+                super.setTitle("Minesweeper - Advanced");
+            case 4:
                 bFlag.setBounds(1260, 40, 90, 30);
                 quit.setBounds(1260, 80, 90, 30);
                 timer.setBounds(1260, 120, 90, 30);
@@ -112,7 +114,7 @@ public class GameWindow extends JFrame implements ActionListener{
                 playAgain.setBounds(1260, 180, 90, 30);
                 stats.setBounds(1260, 220, 90, 30);
                 super.setSize(1720,980);
-                super.setTitle("Minesweeper - Advanced");
+                super.setTitle("Minesweeper - Custom");
                 break;
         }
         bFlag.setEnabled(true);
@@ -136,13 +138,10 @@ public class GameWindow extends JFrame implements ActionListener{
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        //wont need display board - might display for testing
-        //implement playGame 
         boolean gameWon = false;
         boolean gameLost = false;
         for (int i = 0; i < (Minesweeper.dimensions * Minesweeper.dimensions); i++) {
             System.out.println(i + ": Pressed");
-            //seprate if statments
             calcCoordinates(i);
 
             Minesweeper.row = y;

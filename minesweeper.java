@@ -22,7 +22,6 @@ public class Minesweeper {
     static int column;// this will be the input
     static char flag;
     static int flagTotal;
-    GameWindow gameWindow;
 
     public Minesweeper() { // constructor
 
@@ -49,14 +48,16 @@ public class Minesweeper {
                 dimensions = advDimension;
                 mines = advMines;
                 break;
+            case 4:
+                //Set in DifficultyWindow
+                break;
             }
             board = new char[dimensions][dimensions];
-            isMine = new boolean[mines][mines];
+            isMine = new boolean[dimensions + 1][dimensions + 1];
             initBoard(board, dimensions);
             initMines(board, isMine, dimensions, mines);
             displayBoard(board, dimensions);
             new GameWindow();
-            //playGame(board, dimensions, isMine);
     }
 
     public static void playGame(char[][] board, int dimensions, boolean[][] isMine) {
@@ -203,6 +204,7 @@ public class Minesweeper {
 
     public static int findNearbyMines(int row, int column, int dimensions, boolean[][] isMine) {
         int nearbyMines = 0;
+        //error is that it is checking outside the array. After changing isMine to correct array
         if ((row - 1 >= 0) && (column - 1 >= 0) && (isMine[row - 1][column - 1] == true)) { // NW - TL
             nearbyMines++;
         }
@@ -264,7 +266,7 @@ public class Minesweeper {
                     placeMines--;
                     board[randomRow][randomColumn] = '-';
                     isMine[randomRow][randomColumn] = false;
-                }
+                }  
             }
         }
     }
