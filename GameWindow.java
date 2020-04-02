@@ -67,12 +67,27 @@ public class GameWindow extends JFrame implements ActionListener{
         quit.addActionListener(this);
         playAgain.addActionListener(this);
         stats.addActionListener(this);
+
         bFlag.setFont(new Font("Arial", Font.BOLD, 10));
         quit.setFont(new Font("Arial", Font.BOLD, 10));
         timer.setFont(new Font("Arial", Font.BOLD, 10));
         flagsLeft.setFont(new Font("Arial", Font.BOLD, 10));
         playAgain.setFont(new Font("Arial", Font.BOLD, 10));
         stats.setFont(new Font("Arial", Font.BOLD, 10));
+
+        bFlag.setBackground(Color.BLACK);
+        quit.setBackground(Color.BLACK);
+        playAgain.setBackground(Color.BLACK);
+        stats.setBackground(Color.BLACK);      
+
+        bFlag.setForeground(Color.WHITE);
+        quit.setForeground(Color.WHITE);
+        playAgain.setForeground(Color.WHITE);
+        stats.setForeground(Color.WHITE);
+        timer.setForeground(Color.BLACK);
+        flagsLeft.setForeground(Color.BLACK);
+        super.getContentPane().setBackground(Color.LIGHT_GRAY);
+        
         switch (Minesweeper.difficulty) {
             case 1:
                 bFlag.setBounds(520, 40, 90, 30);
@@ -82,7 +97,7 @@ public class GameWindow extends JFrame implements ActionListener{
                 playAgain.setBounds(520, 180, 90, 30);
                 stats.setBounds(520, 220, 90, 30);
                 super.setSize(650,350);
-                super.setTitle("Minesweeper - Beginner");
+                super.setTitle("Minesweeper - Beginner");        
                 break;
             case 2:
                 bFlag.setBounds(890, 40, 90, 30);
@@ -95,7 +110,15 @@ public class GameWindow extends JFrame implements ActionListener{
                 super.setTitle("Minesweeper - Intermediate");
                 break;
             case 3:
+                bFlag.setBounds(1260, 40, 90, 30);
+                quit.setBounds(1260, 80, 90, 30);
+                timer.setBounds(1260, 120, 90, 30);
+                flagsLeft.setBounds(1260, 140, 90, 30);
+                playAgain.setBounds(1260, 180, 90, 30);
+                stats.setBounds(1260, 220, 90, 30);
+                super.setSize(1720,980);
                 super.setTitle("Minesweeper - Advanced");
+                break;
             case 4:
                 bFlag.setBounds(1260, 40, 90, 30);
                 quit.setBounds(1260, 80, 90, 30);
@@ -393,6 +416,7 @@ public class GameWindow extends JFrame implements ActionListener{
                     select[i].setText(String.valueOf(gameBoard[i]));
                 }
                 select[i].setEnabled(false);
+                bFlag.setEnabled(false);
             } else {
                 if (gameBoard[i] == '-') {
                     select[i].setText(Integer.toString(i));

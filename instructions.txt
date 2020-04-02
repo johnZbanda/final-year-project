@@ -1,0 +1,30 @@
+Instructions for Minesweeper
+
+You are presented with a board of squares. Some squares contain mines, others don't.
+If you click on a square containing a mine, you lose.
+If you manage to click all the squares (without clicking on any mines), you win.
+
+Clicking a square which does not have a mine reveals the number of neighbouring squares containing mines. Use this information plus some guessing to avoid the mines.
+To open a square, move your cursor to the square and click it while the Flag is Off. (Button will say "Flag On")
+To mark a square you think has a mine, Select "Flag On", move your cursor to the square and click it.
+To remove that flag, Select "Flag On", move your cursor to the square that has the flag and click it.
+To go back to normally opening squares, Select "Flag Off".
+
+Note:
+The corners or the board will never have a mine on them.
+A squares neighbours are adjacent above, below, left, right and all four diagonals. The board does not wrap around the edges.
+If you open a square with ZERO neighbouring mines, all its neighbours will automatically open.
+If you mark a mine incorrectly, you will have to correct the mistake before you can win. Incorrect mine marking does not lose you the game, but can lead to mistakes.
+You do not have to mark all the mines to win; you need to open all non-mined squares.
+Select "Play Again" to play a new game on the same difficulty.
+Select "Quit" to go back to the main menu.
+Players are able to register and login to store their statstistics for games they play.
+If you are logged in, Select "Stats" to see your personal stats.
+"W" indicates that you have placed a flag where there is not a bomb (after winning or losing).
+
+Status Information:
+You can see the number of flags you have left on the right hand side.
+You can also see the timer on the right hand side.
+To save your statstistics for your game, you must be logged in. You can log in on the main menu.
+There is no maximum for the amount of time you can take to complete a game.
+Players can see a scoreboard on the main menu to see which user has the best times.
