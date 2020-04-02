@@ -6,7 +6,7 @@ Minesweeper is a single-player puzzle video game. The objective is to uncover a 
 # Installation
 Please ensure you have Java 8 installed onto your PC or Desktop.
 
-To retrieve the files, please clone this repository
+To retrieve the files, please clone this repository or download the zip.
 ```bash
 git clone https://github.com/johnZbanda/final-year-project.git
 ```
