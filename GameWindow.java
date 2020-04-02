@@ -45,33 +45,23 @@ public class GameWindow extends JFrame implements ActionListener{
         Minesweeper.flag = 'x';
         for (i = 0; i < (Minesweeper.dimensions * Minesweeper.dimensions); i++) {
             select[i] = new JButton(Integer.toString(i)); //makes it easier to get the values
-            //try to hide the numbers
             if (x == Minesweeper.dimensions - 1) {   
-                select[i].addActionListener(this);
                 select[i].setBounds(50 * (x + 1), 28 * (y + 1), 50, 28);
-                select[i].setVisible(true);
-                //select[i].setText(Integer.toString(i));
-                select[i].setFont(new Font("Arial", Font.PLAIN, 9));
-                select[i].setForeground(Color.BLACK);
                 gameBoard[i] = Minesweeper.board[x][y];
                 mineBoard[i] = Minesweeper.isMine[x][y];
-                //System.out.println("i: " + i + " x: " + x + " y: " + y + " mine: " + mineBoard[i]);
-                x = 0; y++;
-                super.add(select[i]);
-            } else {
-                select[i].addActionListener(this);
-                select[i].setBounds(50 * (x + 1), 28 * (y + 1), 50, 28);
-                select[i].setVisible(true);
-                //select[i].setText(Integer.toString(i));
-                select[i].setFont(new Font("Arial", Font.PLAIN, 9));
-                select[i].setForeground(Color.BLACK);
+                x = 0; y++;            
+            } else {            
+                select[i].setBounds(50 * (x + 1), 28 * (y + 1), 50, 28);             
                 gameBoard[i] = Minesweeper.board[x][y];
                 mineBoard[i] = Minesweeper.isMine[x][y];
-                //System.out.println("i: " + i + " x: " + x + " y: " + y + " mine: " + mineBoard[i]);
-                super.add(select[i]);
                 x++;
             }
-            // System.out.println("Button Value: "+select[i]);
+            select[i].addActionListener(this);
+            select[i].setVisible(true);
+            select[i].setFont(new Font("Arial", Font.PLAIN, 9));
+            select[i].setForeground(Color.BLACK);
+            select[i].setBackground(Color.BLACK);
+            super.add(select[i]);
         }
         bFlag.addActionListener(this);
         quit.addActionListener(this);
@@ -436,6 +426,7 @@ public class GameWindow extends JFrame implements ActionListener{
             }
             select[i].setEnabled(false);
         }
+        bFlag.setEnabled(false);
     }
 
     public void updateFlagUI(int i) {
@@ -443,11 +434,13 @@ public class GameWindow extends JFrame implements ActionListener{
         Minesweeper.row = y;
         Minesweeper.column = x;
         gameBoard[i] = Minesweeper.board[Minesweeper.row][Minesweeper.column];
-
+        
         //playGame will be before this statement
         if (gameBoard[i] == '-') {
+            select[i].setForeground(Color.BLACK);
             select[i].setText(Integer.toString(i));
         } else if (gameBoard[i] == 'f') {
+            select[i].setForeground(Color.RED);
             select[i].setText(Integer.toString(i) + " f");
         }
     }
