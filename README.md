@@ -28,4 +28,6 @@ Then to run the program, input this afterwards
 java -cp ".;mysql-connector-java-8.0.15.jar" Minesweeper
 ```
 
+After completing this application, if you haven't already, please fill in this survey: https://www.surveymonkey.co.uk/r/8ZNHZMJ
+
 # HAVE FUN SWEEPING SOME MINES!!!
