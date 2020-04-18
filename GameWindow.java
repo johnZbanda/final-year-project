@@ -3,7 +3,6 @@ import java.awt.event.*; //For ActionListener
 import javax.swing.*; //Using Java Swing for 
 import java.sql.*;
 import java.util.logging.*;
-//import java.awt.*;
 
 public class GameWindow extends JFrame implements ActionListener{
 
@@ -35,11 +34,10 @@ public class GameWindow extends JFrame implements ActionListener{
         select = new JButton[Minesweeper.dimensions * Minesweeper.dimensions]; //initialise buttons
         gameBoard = new char[Minesweeper.dimensions * Minesweeper.dimensions]; //used to hold
         mineBoard = new boolean[Minesweeper.dimensions * Minesweeper.dimensions];
-        //super.getContentPane().setBackground(Color.YELLOW);
         bFlag = new JButton("Flag - On");
         quit = new JButton("Quit");
-        timer = new JLabel("Timer: ");
-        flagsLeft = new JLabel ("Flags Left: " + (Minesweeper.mines - Minesweeper.flagTotal));
+        timer = new JLabel("Timer: " + formatTime(time));
+        flagsLeft = new JLabel ("Flags Left: " + Minesweeper.mines);
         playAgain = new JButton("Play Again");
         stats = new JButton("Stats");
         Minesweeper.flag = 'x';
@@ -228,11 +226,14 @@ public class GameWindow extends JFrame implements ActionListener{
                             int gamesPlayed = rs.getInt("gamesPlayed");
                             double percentageOfWins = rs.getDouble("percentageOfWins");
                             double bestTime = rs.getDouble("bestTime");
+                            String bestOutput = formatTime(bestTime);
                             double averageTime = rs.getDouble("averageTime");
+                            String averageOutput = formatTime(averageTime);
                             double totalTime = rs.getDouble("totalTime");
+                            String totalOutput = formatTime(totalTime);
                             JOptionPane.showMessageDialog(null, "Username: " + username + "\nGames Played: " + gamesPlayed 
-                            + "\nPercentage of Wins: " + percentageOfWins + "\nBest Time: " + bestTime + "\nAverage Time: " + 
-                            averageTime + "\nTotal Time: " + totalTime, username + " statistics", 2);
+                            + "\nPercentage of Wins: " + percentageOfWins + "% \nBest Time: " + bestOutput + "\nAverage Time: " + 
+                            averageOutput + "\nTotal Time: " + totalOutput, username + " statistics", 2);
                         }
                     } catch (SQLException ex) {
                         Logger.getLogger(GameWindow.class.getName()).log(Level.SEVERE, null, ex);
@@ -247,7 +248,9 @@ public class GameWindow extends JFrame implements ActionListener{
         flagsLeft.setText("Flags Left: " + (Minesweeper.mines - Minesweeper.flagTotal));
 
         time = this.elaspedTime(); //timer works
-        timer.setText("Timer: " + time);
+        String timeString = formatTime(time);
+        timer.setText("Timer: " + timeString);
+
         if (gameWon || gameLost) {
             //db = database value
             if (DifficultyWindow.userID > 0) {
@@ -477,5 +480,14 @@ public class GameWindow extends JFrame implements ActionListener{
                 x = value;
             }
         }
+    }
+
+    public String formatTime(double time) {
+        int timeFormatted = (int) time;
+        int hours = timeFormatted / 3600;
+        int minutes = (timeFormatted - hours * 3600) / 60;
+        int seconds = (timeFormatted - hours * 3600) - minutes * 60;
+        String timeString = String.format("%02d:%02d:%02d", hours, minutes, seconds);
+        return timeString;
     }
 }  

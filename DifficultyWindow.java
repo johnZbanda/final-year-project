@@ -9,7 +9,8 @@ public class DifficultyWindow extends JFrame implements ActionListener{
 
     private static final long serialVersionUID = 1L;
     JLabel title;
-    JButton beginner, intermediate, advanced, login, register, custom, scoreBoard;
+    JButton beginner, intermediate, advanced, register, custom, scoreBoard;
+    static JButton login;
     JButton instructions;
     int difficulty;
     static int userID = 0;
@@ -142,6 +143,10 @@ public class DifficultyWindow extends JFrame implements ActionListener{
             getScoreBoard();
         } else if (str.equals("Instructions")) {
             readInstructions();
+        } else if (str.equals("Logout")) {
+            userID = 0;
+            login.setText("Login");
+            JOptionPane.showMessageDialog(null, "Successfully Logged out");
         }
     }
 
@@ -167,7 +172,8 @@ public class DifficultyWindow extends JFrame implements ActionListener{
 
             String result = "";
             for (int i = 0; i < count; i++) {
-                result = result + (i + 1) + ". " + uName[i] + " - Time: " + bestTime[i] + "\n";
+                String bestOutput = formatTime(bestTime[i]);
+                result = result + (i + 1) + ". " + uName[i] + " - Time: " + bestOutput + "\n";
             }
             JOptionPane.showMessageDialog(null, result, "Scoreboard - Best Time", 2);
         } catch (SQLException ex) {
@@ -189,5 +195,14 @@ public class DifficultyWindow extends JFrame implements ActionListener{
         } catch (Exception ex) {
             System.out.println("Something went wrong");
         }
+    }
+
+    public String formatTime(double time) {
+        int timeFormatted = (int) time;
+        int hours = timeFormatted / 3600;
+        int minutes = (timeFormatted - hours * 3600) / 60;
+        int seconds = (timeFormatted - hours * 3600) - minutes * 60;
+        String timeString = String.format("%02d:%02d:%02d", hours, minutes, seconds);
+        return timeString;
     }
 }

@@ -66,7 +66,8 @@ public class LoginWindow extends JFrame implements ActionListener{
                 System.out.println("Login - User ID: " + DifficultyWindow.userID);
                 JOptionPane.showMessageDialog(null, "Welcome " + uName + "!", "Login Succeeded", 2);
                 //get the ID value here. Then send it to the difficulty and game windows.
-                //Users might not be able to log out. 
+                //Users might not be able to log out.
+                DifficultyWindow.login.setText("Logout");
                 this.dispose();
             } else {
                 JOptionPane.showMessageDialog(null, "Incorrect Username or Password", "Login Failed", 2);

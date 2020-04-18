@@ -3,7 +3,7 @@ import java.util.*;
 //This will be the refactored version of Minesweeper
 
 //Will write the correct terms for certain software skills as well
-public class Minesweeper {
+public class Minesweeper extends Thread{
 
     // Singleton for dimensions and mines
     final static int begDimension = 9;
@@ -33,55 +33,52 @@ public class Minesweeper {
 
     }
 
+    //functionality
     public static void chooseDifficulty() {
-     // set dimension and the mines for the board
-            switch (difficulty) {
-            case 1:
-                dimensions = begDimension;
-                mines = begMines;
-                break;
-            case 2:
-                dimensions = intDimension;
-                mines = intMines;
-                break;
-            case 3:
-                dimensions = advDimension;
-                mines = advMines;
-                break;
-            case 4:
-                //Set in DifficultyWindow
-                break;
-            }
-            board = new char[dimensions][dimensions];
-            isMine = new boolean[dimensions + 1][dimensions + 1];
-            initBoard(board, dimensions);
-            initMines(board, isMine, dimensions, mines);
-            displayBoard(board, dimensions);
-            new GameWindow();
+    // set dimension and the mines for the board
+        switch (difficulty) {
+        case 1:
+            dimensions = begDimension;
+            mines = begMines;
+            break;
+        case 2:
+            dimensions = intDimension;
+            mines = intMines;
+            break;
+        case 3:
+            dimensions = advDimension;
+            mines = advMines;
+            break;
+        case 4:
+            //Set in DifficultyWindow
+            break;
+        }
+        board = new char[dimensions][dimensions];
+        isMine = new boolean[dimensions][dimensions]; //+1 to resolve issue
+        initBoard(board, dimensions);
+        initMines(board, isMine, dimensions, mines);
+        displayBoard(board, dimensions);
+        new GameWindow();
     }
 
+    //functionality
     public static void playGame(char[][] board, int dimensions, boolean[][] isMine) {
         boolean gameWon = false;
         boolean gameLost = false;
-        flagTotal = checkTotalFlags();
-        
+        flagTotal = checkTotalFlags();    
         if (flag == 'f') {
             System.out.println("Flag is on");
         } else {
             gameLost = checkGameLost(isMine, row, column);
             gameWon = checkGameWon(board, dimensions, isMine);
         }
-
         if (gameLost == true) {
-            //updateBoard(board, dimensions, row, column, flag, isMine);
             displayLostBoard(board, dimensions, isMine);
             System.out.println("You Lose! You found a Mine at " + column + "," + row);
-
         } else if (gameWon == true) {
             updateBoard(board, dimensions, row, column, flag, isMine);
             displayWinBoard(board, dimensions, isMine);
             System.out.println("CONGRATULATIONS!!! YOU WON!!!");
-
         } else {
             if (Minesweeper.board[row][column] == '-') {              
                 if (flagTotal > mines - 1 && flag == 'f') {
@@ -102,7 +99,6 @@ public class Minesweeper {
             }
             displayBoard(board, dimensions);
         }
-
     }
 
     public static void displayWinBoard(char[][] board, int dimensions, boolean[][] isMine) {
@@ -138,6 +134,7 @@ public class Minesweeper {
         System.out.println();
     }
 
+    //functionality
     public static void updateBoard(char[][] board, int dimensions, int row, int column, char flag, boolean[][] isMine) {
         if ((flag == 'f' || flag == 'F') && board[row][column] == '-') {
             board[row][column] = 'f';
@@ -149,28 +146,22 @@ public class Minesweeper {
         }
     }
 
+    //functionality - proud of this - Algorithm design and recursion
     public static void zeroClause(char[][] board, int dimensions, int row, int column, int flag, boolean[][] isMine) {
         int nearbyMines = 0;
-        nearbyMines = findNearbyMines(row, column, dimensions, isMine);
+        nearbyMines = findNearbyMines(row, column, dimensions, isMine); //is checked row by row, skipping the selected square
         if (nearbyMines == 0) {
-            int x = -1;
+            int x = -1; //set to -1 so that it can check the eight coordinates based on the selected square/coordinatte
             while (x <= 1) {
-                if (row + x < 0 || row + x > row + 1) {
-
-                } else {
+                if (row + x < 0 || row + x > row + 1) {} else {
                     int y = -1;
                     while (y <= 1) {
-                        if (column + y < 0 || column + y > column + 1) {
-
-                        } else {
-                            if (row + x >= dimensions || column + y >= dimensions) {
-
-                            } else {
+                        if (column + y < 0 || column + y > column + 1) {} else {
+                            if (row + x >= dimensions || column + y >= dimensions) { } else {
                                 int checkNext = findNearbyMines(row + x, column + y, dimensions, isMine);
-                                if (board[row + x][column + y] == 'f') {
-
-                                } else if (checkNext == 0) {
+                                if (board[row + x][column + y] == 'f') {} else if (checkNext == 0) {
                                     if (board[row + x][column + y] == '-') {
+                                        //use of linear recursion
                                         changeIntToChar(board, dimensions, row + x, column + y, isMine);
                                         if (column + y > dimensions - 1 || column + y < 0) {
                                             zeroClause(board, dimensions, row - 1, column, flag, isMine);
@@ -195,6 +186,7 @@ public class Minesweeper {
         }
     }
 
+    //functionality
     public static void changeIntToChar(char[][] board, int dimensions, int row, int column, boolean[][] isMine) {
         int nearbyMines = 0;
         nearbyMines = findNearbyMines(row, column, dimensions, isMine);
@@ -202,6 +194,7 @@ public class Minesweeper {
         board[row][column] = intToChar;
     }
 
+    //functionality
     public static int findNearbyMines(int row, int column, int dimensions, boolean[][] isMine) {
         int nearbyMines = 0;
         //error is that it is checking outside the array. After changing isMine to correct array
@@ -214,7 +207,7 @@ public class Minesweeper {
         if ((row + 1 < dimensions) && (column - 1 >= 0) && (isMine[row + 1][column - 1] == true)) { // NE - TR
             nearbyMines++;
         }
-        if ((row + 1 >= 0) && (column < dimensions) && (isMine[row + 1][column] == true)) { // E - R
+        if ((row + 1 < dimensions) && (column < dimensions) && (isMine[row + 1][column] == true)) { // E - R
             nearbyMines++;
         }
         if ((row + 1 < dimensions) && (column + 1 < dimensions) && (isMine[row + 1][column + 1] == true)) { // SE - BR
@@ -232,6 +225,7 @@ public class Minesweeper {
         return nearbyMines;
     }
 
+    //functionality
     public static void initBoard(char[][] board, int dimensions) { // initialise board
         for (int row = 0; row < dimensions; row++) {
             for (int column = 0; column < dimensions; column++) {
@@ -252,6 +246,7 @@ public class Minesweeper {
         System.out.println("");
     }
 
+    //functionality
     public static void initMines(char board[][], boolean[][] isMine, int dimensions, int mines) { // initialise mines
         Random randomNumber = new Random();
         for (int placeMines = 0; placeMines < mines; placeMines++) {
@@ -271,12 +266,16 @@ public class Minesweeper {
         }
     }
 
+    //functionality - This didnt work for the majority of the development. Explain why
     public static boolean checkGameWon(char[][] board, int dimensions, boolean[][] isMine) {
         boolean gameWon = true;
         int win = 0;
         for (int x = 0; x < dimensions; x++) {
             for (int y = 0; y < dimensions; y++) {
-                 if (board[x][y] == '-' || (board[x][y] == 'f' && isMine[x][y] == true)) { //it reads flags as a plus on the win condition
+                if (board[x][y] == '-' || (board[x][y] == 'f' && isMine[x][y] == true)) { //it reads flags as a plus on the win condition
+                    win++;
+                }
+                if (board[x][y] == 'f' && isMine[x][y] == false) {
                     win++;
                 }
             }
@@ -289,6 +288,7 @@ public class Minesweeper {
         return gameWon;
     }
 
+    //functionality
     public static boolean checkGameLost(boolean[][] isMine, int row, int column) {
         boolean mineFound = false;
         if (isMine[row][column] == true) {
@@ -297,6 +297,7 @@ public class Minesweeper {
         return mineFound;
     }
 
+    //functionality
     public static int checkTotalFlags() {
         int flagsLeft = 0;
         for (int x = 0; x < dimensions; x++) {
