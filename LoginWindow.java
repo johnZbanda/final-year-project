@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.event.*;
 
 public class LoginWindow extends JFrame implements ActionListener{
-    
+    //used to login users
     private static final long serialVersionUID = 1L;
 
     JButton login;

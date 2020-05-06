@@ -19,7 +19,7 @@ public class Minesweeper extends Thread{
     static char board[][];
     static boolean isMine[][];
     static int row;
-    static int column;// this will be the input
+    static int column;
     static char flag;
     static int flagTotal;
 
@@ -136,19 +136,19 @@ public class Minesweeper extends Thread{
 
     //functionality
     public static void updateBoard(char[][] board, int dimensions, int row, int column, char flag, boolean[][] isMine) {
-        if ((flag == 'f' || flag == 'F') && board[row][column] == '-') {
+        if ((flag == 'f' || flag == 'F') && board[row][column] == '-') { //from - to flag
             board[row][column] = 'f';
-        } else if ((flag == 'f' || flag == 'F') && board[row][column] == 'f') {
+        } else if ((flag == 'f' || flag == 'F') && board[row][column] == 'f') { //from flag to -
             board[row][column] = '-';
-        } else {
-            changeIntToChar(board, dimensions, row, column, isMine);
+        } else { //otherwise change values to respective numbers then to a char
+            changeIntToChar(board, dimensions, row, column, isMine); 
             zeroClause(board, dimensions, row, column, flag, isMine);
         }
     }
 
     //functionality - proud of this - Algorithm design and recursion
     public static void zeroClause(char[][] board, int dimensions, int row, int column, int flag, boolean[][] isMine) {
-        int nearbyMines = 0;
+        int nearbyMines = 0; //checks to see if 0 was on selected square
         nearbyMines = findNearbyMines(row, column, dimensions, isMine); //is checked row by row, skipping the selected square
         if (nearbyMines == 0) {
             int x = -1; //set to -1 so that it can check the eight coordinates based on the selected square/coordinatte
@@ -161,7 +161,7 @@ public class Minesweeper extends Thread{
                                 int checkNext = findNearbyMines(row + x, column + y, dimensions, isMine);
                                 if (board[row + x][column + y] == 'f') {} else if (checkNext == 0) {
                                     if (board[row + x][column + y] == '-') {
-                                        //use of linear recursion
+                                        //use of iterative recursion
                                         changeIntToChar(board, dimensions, row + x, column + y, isMine);
                                         if (column + y > dimensions - 1 || column + y < 0) {
                                             zeroClause(board, dimensions, row - 1, column, flag, isMine);
@@ -188,7 +188,7 @@ public class Minesweeper extends Thread{
 
     //functionality
     public static void changeIntToChar(char[][] board, int dimensions, int row, int column, boolean[][] isMine) {
-        int nearbyMines = 0;
+        int nearbyMines = 0; //changes integer to a character
         nearbyMines = findNearbyMines(row, column, dimensions, isMine);
         char intToChar = (char) (nearbyMines + '0');
         board[row][column] = intToChar;
@@ -196,7 +196,7 @@ public class Minesweeper extends Thread{
 
     //functionality
     public static int findNearbyMines(int row, int column, int dimensions, boolean[][] isMine) {
-        int nearbyMines = 0;
+        int nearbyMines = 0; //used to find number of adjacent mines on selected square. Maximum should be 8
         //error is that it is checking outside the array. After changing isMine to correct array
         if ((row - 1 >= 0) && (column - 1 >= 0) && (isMine[row - 1][column - 1] == true)) { // NW - TL
             nearbyMines++;
@@ -235,8 +235,7 @@ public class Minesweeper extends Thread{
     }
 
     public static void displayBoard(char[][] board, int dimensions) { // display board
-        System.out.println("");
-        for (int x = 0; x < dimensions; x++) { // row and column are the dimensions but it does not make sense
+        for (int x = 0; x < dimensions; x++) { //shown after every selection of a square
             // sort out numbers on top or below
             for (int y = 0; y < dimensions; y++) {
                 System.out.print(board[x][y]);
@@ -251,7 +250,7 @@ public class Minesweeper extends Thread{
         Random randomNumber = new Random();
         for (int placeMines = 0; placeMines < mines; placeMines++) {
             int randomRow = randomNumber.nextInt(dimensions);
-            int randomColumn = randomNumber.nextInt(dimensions);
+            int randomColumn = randomNumber.nextInt(dimensions); //row and column are randomised
             if (isMine[randomRow][randomColumn] == true) {
                 placeMines--;
             } else {
@@ -280,6 +279,7 @@ public class Minesweeper extends Thread{
                 }
             }
         }
+        //loops through rows and columns checking if there are no open spaces (i.e. numbers are shown)
         if (win == mines) {
             gameWon = true;
         } else {

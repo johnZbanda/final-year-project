@@ -99,7 +99,7 @@ public class DifficultyWindow extends JFrame implements ActionListener{
         String str = e.getActionCommand();
         if (str.equals("Beginner")) { 
             Minesweeper.difficulty = 1;
-            Minesweeper.chooseDifficulty();   
+            Minesweeper.chooseDifficulty(); //used to set the number of mines and dimensions for the board  
             //gameWindow = new GameWindow();            
         } else if (str.equals("Intermediate")) {
             Minesweeper.difficulty = 2;
@@ -140,7 +140,9 @@ public class DifficultyWindow extends JFrame implements ActionListener{
                 JOptionPane.showMessageDialog(null, "Please input a number");
             }
         } else if (str.equals("Scoreboard")) {
-            getScoreBoard();
+            getScoreboard();
+
+            //Refactor this part of the code
         } else if (str.equals("Instructions")) {
             readInstructions();
         } else if (str.equals("Logout")) {
@@ -150,41 +152,68 @@ public class DifficultyWindow extends JFrame implements ActionListener{
         }
     }
 
-    public void getScoreBoard() {
+    public void getScoreboard() { //gets the best times for every difficulty
         PreparedStatement ps;
         ResultSet rs;
         String uName[] = new String[100];
         double bestTime[] = new double[100];
         int count = 0;
+        String query = "";
+        String text = "";
 
-        String query = "SELECT `username`, `bestTime` FROM `users` WHERE `bestTime` NOT IN (0) ORDER BY `bestTime`";
-
-        try {
-            ps = MySQLConnection.getConnection().prepareStatement(query);
-
-            rs = ps.executeQuery();
-
-            while (rs.next()) {
-                uName[count] = rs.getString("username");
-                bestTime[count] = rs.getDouble("bestTime");
-                count++;
+        for (int queryCount = 0; queryCount < 4; queryCount++) {
+            switch (queryCount) {
+                case 0:
+                    query = "SELECT `username`, `bestTime` FROM `users` WHERE `bestTime` NOT IN (0) ORDER BY `bestTime`";
+                    text = "Scoreboard - Best Time";
+                    break;
+                case 1:
+                    query = "SELECT `users`.`username`, `game`.`timeTaken` FROM `game` JOIN `users` ON `users`.`idUsers` = `game`.`userID` WHERE `win` = 1 AND `difficulty` = 1 GROUP BY `userID` ORDER BY `timeTaken`";
+                    text = "Scoreboard - Beginner Best Time";
+                    break;
+                case 2:
+                    query = "SELECT `users`.`username`, `game`.`timeTaken` FROM `game` JOIN `users` ON `users`.`idUsers` = `game`.`userID` WHERE `win` = 1 AND `difficulty` = 2 GROUP BY `userID` ORDER BY `timeTaken`";
+                    text = "Scoreboard - Intermediate Best Time";
+                    break;
+                case 3:
+                    query = "SELECT `users`.`username`, `game`.`timeTaken` FROM `game` JOIN `users` ON `users`.`idUsers` = `game`.`userID` WHERE `win` = 1 AND `difficulty` = 3 GROUP BY `userID` ORDER BY `timeTaken`";
+                    text = "Scoreboard - Advanced Best Time";
+                    break;
             }
 
-            String result = "";
-            for (int i = 0; i < count; i++) {
-                String bestOutput = formatTime(bestTime[i]);
-                result = result + (i + 1) + ". " + uName[i] + " - Time: " + bestOutput + "\n";
+            try {
+                ps = MySQLConnection.getConnection().prepareStatement(query);
+    
+                rs = ps.executeQuery();
+                count = 0;
+                while (rs.next()) {
+                    if (queryCount == 0) {
+                        uName[count] = rs.getString("username");
+                        bestTime[count] = rs.getDouble("bestTime");
+                        count++;
+                    } else {
+                        uName[count] = rs.getString("username");
+                        bestTime[count] = rs.getDouble("timeTaken");
+                        count++;
+                    }                    
+                }
+    
+                String result = "";
+                for (int i = 0; i < count; i++) {
+                    String bestOutput = formatTime(bestTime[i]);
+                    result = result + (i + 1) + ". " + uName[i] + " - Time: " + bestOutput + "\n";
+                }
+                JOptionPane.showMessageDialog(null, result, text, 2);
+            } catch (SQLException ex) {
+                Logger.getLogger(DifficultyWindow.class.getName()).log(Level.SEVERE, null, ex);
             }
-            JOptionPane.showMessageDialog(null, result, "Scoreboard - Best Time", 2);
-        } catch (SQLException ex) {
-            Logger.getLogger(DifficultyWindow.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    public void readInstructions() {
+    public static void readInstructions() { //reads the instructions for the game
         try {
             File file = new File("D:\\1finalyearproject\\final-year-project\\instructions.txt");
-            BufferedReader br = new BufferedReader(new FileReader(file));
+            BufferedReader br = new BufferedReader(new FileReader(file)); //uses bufferedreader
 
             String st;
             String instrString = "";
@@ -197,7 +226,7 @@ public class DifficultyWindow extends JFrame implements ActionListener{
         }
     }
 
-    public String formatTime(double time) {
+    public String formatTime(double time) { //formats time in hours, minutes and seconds
         int timeFormatted = (int) time;
         int hours = timeFormatted / 3600;
         int minutes = (timeFormatted - hours * 3600) / 60;

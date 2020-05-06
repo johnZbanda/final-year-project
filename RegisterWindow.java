@@ -5,7 +5,7 @@ import java.awt.event.*;
 //import com.mysql.jdbc.Driver;
 
 public class RegisterWindow extends JFrame implements ActionListener {
-    
+    //used to register the user. very similar to login window
     private static final long serialVersionUID = 1L;
 
     JButton register;
@@ -78,7 +78,7 @@ public class RegisterWindow extends JFrame implements ActionListener {
         String pWord = passwordTField.getText();
         String rpWord = repassTField.getText();
 
-        if (uName.equals("")) {
+        if (uName.equals("")) { //error checking
             JOptionPane.showMessageDialog(null, "Add a Username");
         } else if (pWord.equals("")) {
             JOptionPane.showMessageDialog(null, "Add a Password");
@@ -89,7 +89,6 @@ public class RegisterWindow extends JFrame implements ActionListener {
         } else {
             PreparedStatement ps;
             String query = "INSERT INTO `users` (`username`, `password`) VALUES (?,?)";
-            //(" + uName + "," + pWord + ")"
 
             try {
                 ps = MySQLConnection.getConnection().prepareStatement(query);
