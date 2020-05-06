@@ -72,7 +72,7 @@ public class Minesweeper extends Thread{
             gameLost = checkGameLost(isMine, row, column);
             gameWon = checkGameWon(board, dimensions, isMine);
         }
-        if (gameLost == true) {
+        if (gameLost == true && board[row][column] != 'f') {
             displayLostBoard(board, dimensions, isMine);
             System.out.println("You Lose! You found a Mine at " + column + "," + row);
         } else if (gameWon == true) {
@@ -91,6 +91,8 @@ public class Minesweeper extends Thread{
             } else if (board[row][column] == 'f') {
                 if (flag == 'f' && flagTotal > 0) {
                     updateBoard(board, dimensions, row, column, flag, isMine); 
+                } else if (flag != 'f') {
+                    System.out.println("THERE IS A FLAG THERE");
                 } else {
                     System.out.println("THERE IS A FLAG THERE");
                 }
