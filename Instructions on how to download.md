@@ -15,7 +15,7 @@ git clone https://github.com/johnZbanda/final-year-project.git
 
 In the command line, redirect to this folder
 ```bash
-cd final-year-project
+cd final-year-project-master
 ```
 
 To compile my program, input this into the command line while in this folder
